@@ -45,3 +45,10 @@
 
       tracking_thres: 5
       lost_time_thres: 1.0
+
+/ballistic_calculation:
+  iteration_coeffcient_first: 0.1  
+  iteration_coeffcient_second: 0.05
+  air_resistence: 0.1
+  bullet_speed: 30.0
+

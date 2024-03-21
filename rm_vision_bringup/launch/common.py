@@ -30,3 +30,14 @@ tracker_node = Node(
     parameters=[node_params],
     ros_arguments=['--log-level', 'armor_tracker:='+launch_params['tracker_log_level']],
 )
+
+ballisticnode = Node(
+    package='ballistic_calculation',
+    executable='ballistic_calculation',
+    output='screen',
+    emulate_tty=True,
+    parameters=[
+        node_params
+    ],
+    
+)

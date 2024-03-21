@@ -11,6 +11,8 @@
 
   <depend>rm_auto_aim</depend>
   <depend>rm_serial_driver</depend>
+  <depend>rm_gimbal_description</depend>
+  <depend>hik_camera</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

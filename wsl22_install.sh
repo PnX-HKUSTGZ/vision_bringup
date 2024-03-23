@@ -1,5 +1,5 @@
 # change source
-sudo mv /etc/apt/sources.list /etc/apt/sources.listbake
+sudo mv /etc/apt/sources.list /etc/apt/sources.list.bake
 sudo sh -c "echo '# 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
 deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
 # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
@@ -17,7 +17,7 @@ deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe m
 
 sudo apt update
 sudo apt upgrade -y
-sudo apt install gedit libopencv-dev libopencv-contrib-dev libceres-dev libeigen3-dev build-essential gdb git cmake htop curl gnupg2 wget -y
+sudo apt install gedit gcc-12 g++-12 cutecom libopencv-dev libopencv-contrib-dev libceres-dev libeigen3-dev build-essential gdb git cmake htop curl gnupg2 wget -y
 
 # install ros
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
@@ -49,11 +49,9 @@ alias md='mkdir'
 sudo dpkg -i MVS-2.1.2_x86_64_20231225.deb 
 sudo dpkg -i code_1.87.2-1709912201_amd64.deb 
 
-source ~/.bashrc
-md rmvision
-cd rmvision
-md src
-cd src
+cd 
+source .bashrc
+mkdir -p rmvision/src && cd rmvision/src
 git clone https://github.com/PnX-HKUSTGZ/auto-aim.git --depth 1
 git clone https://github.com/PnX-HKUSTGZ/vision_bringup.git --depth 1
 git clone --depth 1  https://github.com/PnX-HKUSTGZ/rm_serial_driver.git

@@ -13,6 +13,7 @@
   <depend>rm_serial_driver</depend>
   <depend>rm_gimbal_description</depend>
   <depend>hik_camera</depend>
+  <depend>foxglove_bridge</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

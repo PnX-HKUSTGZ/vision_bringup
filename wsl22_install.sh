@@ -97,7 +97,7 @@ else
         echo "Skipping NoMachine installation."
     fi
 
-    read -p $'\e[32m install VSCode? (y/n): \e[0m' install
+    read -p $'\e[32m install VSCode & code-server? (y/n): \e[0m' install
     if [ "$install" == "y" ]; then
         sudo dpkg -i code-server_4.22.1_amd64.deb
         sudo dpkg -i code_1.87.2-1709912201_amd64.deb
@@ -113,8 +113,18 @@ if [ "$pull_code" == "y" ]; then
     source ~/.bashrc
 
     if [ -d "pnx_ws" ]; then
-        echo -e "\e[34m'pnx_ws' directory already exists. Assuming the code has been pulled.\e[0m"
+        echo -e "\e[34m'pnx_ws' directory already exists. try pull newest commits.\e[0m"
         cd pnx_ws/src
+        for d in ./*; do
+            if [ -d "$d" ]; then
+                cd "$d"
+                if [ -d ".git" ]; then
+                    echo "Updating $d"
+                    git pull
+                fi
+                cd ..
+            fi
+        done
     else
         echo "cloning the latest code..."
         mkdir -p pnx_ws/src && cd pnx_ws/src
@@ -131,7 +141,10 @@ if [ "$pull_code" == "y" ]; then
     colcon build --symlink-install --packages-up-to rm_vision_bringup
     source ~/pnx_ws/install/setup.bash
     echo 'source ~/pnx_ws/install/setup.bash' >> ~/.bashrc
+else
+    echo "Skipping code pull and build."
 fi
 
+echo " "
 echo "well done"
 echo "To dev in the terminal, please run 'source ~/.bashrc' to enable the environment"

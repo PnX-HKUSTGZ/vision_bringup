@@ -76,7 +76,7 @@ sudo rm /bin/sh
 sudo ln -s /bin/bash /bin/sh
 
 #install .deb files
-wget https://github.com/coder/code-server/releases/download/v4.22.1/code-server_4.22.1_amd64.deb 
+#wget https://github.com/coder/code-server/releases/download/v4.22.1/code-server_4.22.1_amd64.deb 
 
 
 

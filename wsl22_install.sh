@@ -1,7 +1,8 @@
 #!/bin/bash
 
+curl http://baidu.com
 # check internet connection
-ping -c1 -w2 baidu.com > /dev/null
+#ping -c1 -w2 baidu.com > /dev/null
 if [[ $? != 0 ]];then     
     echo "No internet connection. Try to connect to the internet first then run this script again."
     exit 0
@@ -25,35 +26,51 @@ fi
 
 # change apt source
 sudo mv /etc/apt/sources.list /etc/apt/sources.list.bake
-sudo sh -c "echo 'deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
-deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+sudo sh -c "echo 'deb https://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse
+
+# deb https://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse
+# deb-src https://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse
+
+deb https://mirrors.aliyun.com/ubuntu/ jammy-security main restricted universe multiverse
+# deb-src https://mirrors.aliyun.com/ubuntu/ jammy-security main restricted universe multiverse
+
+deb https://mirrors.aliyun.com/ubuntu/ jammy-updates main restricted universe multiverse
+#deb-src https://mirrors.aliyun.com/ubuntu/ jammy-updates main restricted universe multiverse
+
+deb https://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted universe multiverse
+# deb-src https://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted universe multiverse
+
 # 预发布软件源，不建议启用
 # deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-proposed main restricted universe multiverse' > /etc/apt/sources.list"
+# deb https://mirrors.aliyun.com/ubuntu/ jammy-proposed main restricted universe multiverse
+# deb-src https://mirrors.aliyun.com/ubuntu/ jammy-proposed main restricted universe multiverse
 
 echo -e "\e[32minstall basic tools...\e[0m"
-sudo apt update && sudo apt upgrade -y
-sudo apt install gedit gcc-12 g++-12 cutecom libopencv-dev libopencv-contrib-dev libceres-dev libeigen3-dev build-essential gdb git cmake htop curl gnupg2 wget -y
+sudo apt update && sudo apt upgrade -
+sudo apt install gedit libopencv-dev libopencv-contrib-dev libceres-dev libeigen3-dev build-essential gdb git cmake htop curl gnupg2 wget -y
 
 # install ros2
 echo -e "\e[32minstall ROS2...\e[0m"
-sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+sudo wget -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] https://mirrors.aliyun.com/ros2/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 sudo apt update && sudo apt install ros-humble-desktop ros-dev-tools -y
+sudo apt install ros-humble-asio-cmake-module
+dpkg -L ros-humble-asio-cmake-module
 if ! grep -q "source /opt/ros/humble/setup.bash" ~/.bashrc; then
     echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 fi
+
 # 手动模拟 rosdep init
 sudo mkdir -p /etc/ros/rosdep/sources.list.d/
-sudo curl -o /etc/ros/rosdep/sources.list.d/20-default.list https://mirrors.tuna.tsinghua.edu.cn/github-raw/ros/rosdistro/master/rosdep/sources.list.d/20-default.list
+sudo curl -o /etc/ros/rosdep/sources.list.d/20-default.list https://mirrors.aliyun.com/github-raw/ros/rosdistro/master/rosdep/sources.list.d/20-default.list
 # 为 rosdep update 换源
-export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml
+export ROSDISTRO_INDEX_URL=https://mirrors.aliyun.com/rosdistro/index-v4.yaml
 sudo apt install python3-rosdep2 -y
 rosdep update
+
 # 每次 rosdep update 之前，均需要增加该环境变量. 为了持久化该设定，将其写入 .bashrc 中
-if ! grep -q "export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml" ~/.bashrc; then
-    echo 'export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml' >> ~/.bashrc
+if ! grep -q "export ROSDISTRO_INDEX_URL=https://mirrors.aliyun.com/rosdistro/index-v4.yaml" ~/.bashrc; then
+    echo 'export ROSDISTRO_INDEX_URL=https://mirrors.aliyun.com/rosdistro/index-v4.yaml' >> ~/.bashrc
 fi
 
 # add some convinient alias,prevent duplicate alias
@@ -77,8 +94,13 @@ sudo ln -s /bin/bash /bin/sh
 
 #install .deb files
 #wget https://github.com/coder/code-server/releases/download/v4.22.1/code-server_4.22.1_amd64.deb 
+# wget https://packages.microsoft.com/repos/vscode/pool/main/c/code/code_1.94.0-1727878498_amd64.deb 
+# wget https://packages.microsoft.com/repos/vscode/pool/main/c/code/code_1.87.2-1709912201_amd64.deb 
+# wget https://packages.microsoft.com/repos/vscode/pool/main/c/code/code_1.94.1-1728111316_amd64.deb          
 
-
+# #install network-manager
+# sudo apt update
+# sudo apt install network-manager
 
 # install dependencies from .deb files
 echo -e "\e[33mNow we turn to deb installation. Make sure these .deb(s) are in current dir \e[0m"
@@ -106,6 +128,8 @@ else
     if [ "$install" == "y" ]; then
         sudo dpkg -i code-server_4.22.1_amd64.deb
         sudo dpkg -i code_1.87.2-1709912201_amd64.deb
+        sudo dpkg -i code_1.94.0-1727878498_amd64.deb
+        sudo apt-get install -f
     else
         echo "Skipping VSCode installation."
     fi
@@ -139,7 +163,7 @@ if [ "$pull_code" == "y" ]; then
         git clone --depth 1  https://github.com/PnX-HKUSTGZ/rm_gimbal_description.git
         git clone --depth 1  https://github.com/PnX-HKUSTGZ/hik-driver.git
     fi
-    
+
     cd ..
     echo "building..."
     rosdep install --from-paths src --ignore-src -r -y
@@ -153,3 +177,6 @@ fi
 echo " "
 echo "well done"
 echo "To dev in the terminal, please run 'source ~/.bashrc' to enable the environment"
+
+rm -rf build/ install/ log/
+colcon build

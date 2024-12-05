@@ -1,9 +1,15 @@
 camera: hik
 
 odom2camera:
-  xyz: "\"0.10 0.0  0.05\""
+  xyz: "\"0.0 0.0  0.0\""
   rpy: "\"0.0  0.0  0.0\""
 
 detector_log_level: INFO
 tracker_log_level: INFO
 serial_log_level: INFO
+
+# 设置启动参数
+# true: 读取视频 false: 读取相机
+video_play: true
+# true: 开启打符 false：关闭打符
+rune: true

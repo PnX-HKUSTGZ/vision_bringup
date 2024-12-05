@@ -55,3 +55,32 @@
     swich_stategy_1: 30.0
     swich_stategy_2: 120.0
     max_v_yaw_PTZ: 1.0
+/rune_detector:
+  ros__parameters:
+      detect_color: 1
+      debug: true
+      requests_limit: 5 
+      detect_r_tag: true # 是否使用传统方法识别R标
+      min_lightness: 100 # 二值化亮度阈值 (R标识别)
+      detector:
+        model: "package://rune_detector/model/yolox_rune_3.6m.onnx" # GPU模式下请用xml文件
+        device_type: "CPU"
+/rune_solver:
+  ros__parameters:
+    debug: true
+    auto_type_determined: true 
+    predict_time: 0.0
+    compensator_type: resistance
+    gravity: 9.8
+    bullet_speet: 28.0
+    lost_time_thres: 0.5
+    ekf:
+      q: [4e-4, 1e-4, 1e-4, 1e-4]
+      r: [4e-2, 1e-2, 1e-2, 1e-2]
+/rune_ballistic:
+  ros__parameters:
+    iteration_coeffcient: 0.05
+    air_resistence: 0.1
+    bullet_speed: 30.0
+    odom2gun:
+      xyz: [0.0,0.0,0.0]

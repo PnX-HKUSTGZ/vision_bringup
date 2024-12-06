@@ -60,17 +60,28 @@ def generate_launch_description():
                     parameters=[node_params],
                     extra_arguments=[{'use_intra_process_comms': True}]
                 )
-    serial_driver_node = Node(
-        package='rm_serial_driver',
-        executable='rm_serial_driver_node',
-        name='serial_driver',
-        output='both',
-        emulate_tty=True,
-        parameters=[node_params],
-        on_exit=Shutdown(),
-        ros_arguments=['--ros-args', '--log-level',
-                       'serial_driver:='+launch_params['serial_log_level']],
-    )
+    
+    # 串口
+    if launch_params['virtual_serial']:
+        serial_driver_node = Node(
+            package='rm_serial_driver',
+            executable='virtual_serial_node',
+            name='virtual_serial',
+            output='both',
+            emulate_tty=True,
+            parameters=[node_params],
+            ros_arguments=['--ros-args', '-p', 'has_rune:=true' if launch_params['rune'] else 'has_rune:=false'],
+        )
+    else:
+        serial_driver_node = Node(
+            package='rm_serial_driver',
+            executable='rm_serial_driver_node',
+            name='serial_driver',
+            output='both',
+            emulate_tty=True,
+            parameters=[node_params],
+            ros_arguments=['--ros-args', ],
+        )
     
     if launch_params['video_play']:
         image_node = get_video_reader_node('video_reader', 'video_reader::VideoReaderNode')

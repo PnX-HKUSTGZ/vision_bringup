@@ -38,6 +38,7 @@
 
       r_xyz_factor: 4e-4
       r_yaw: 5e-3
+      r_radius: 0.01
 
     tracker:
       max_match_distance: 0.5

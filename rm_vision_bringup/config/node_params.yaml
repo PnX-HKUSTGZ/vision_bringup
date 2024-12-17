@@ -12,7 +12,7 @@
     flow_control: none
     parity: none
     stop_bits: "1"
-/serial_driver: #虚拟串口
+/virtual_serial: #虚拟串口
   ros__parameters:
     roll: 0.0
     pitch: 0.0

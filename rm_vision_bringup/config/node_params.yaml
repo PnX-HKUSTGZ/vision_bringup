@@ -16,8 +16,8 @@
 /armor_detector:
   ros__parameters:
     debug: true
-
-    detect_color: 1
+#0:red;1:blue
+    detect_color: 0
     binary_thres: 80
 
     light.min_ratio: 0.1
@@ -51,5 +51,5 @@
     iteration_coeffcient_first: 0.1  
     iteration_coeffcient_second: 0.05
     air_resistence: 0.1
-    bullet_speed: 30.0
+    bullet_speed: 23.0
 

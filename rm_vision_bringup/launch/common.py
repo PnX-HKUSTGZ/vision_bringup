@@ -41,3 +41,13 @@ ballistic_node = Node(
     ],
     
 )
+
+video_reader_node = Node(
+    package='video_reader',
+    executable='video_reader_node',
+    output='screen',
+    emulate_tty=True,
+    parameters=[
+        node_params
+    ],
+)

@@ -38,6 +38,7 @@
 
       r_xyz_factor: 4e-4
       r_yaw: 5e-3
+      r_radius: 0.01
 
     tracker:
       max_match_distance: 0.5
@@ -51,5 +52,7 @@
     iteration_coeffcient_first: 0.1  
     iteration_coeffcient_second: 0.05
     air_resistence: 0.1
-    bullet_speed: 23.0
-
+    bullet_speed: 30.0
+    swich_stategy_1: 30.0
+    swich_stategy_2: 120.0
+    max_v_yaw_PTZ: 1.0

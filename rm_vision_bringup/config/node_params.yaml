@@ -6,7 +6,7 @@
 
 /serial_driver:
   ros__parameters:
-    timestamp_offset: 0.006
+    timestamp_offset: -0.0025
     device_name: /dev/ttyACM0
     baud_rate: 115200
     flow_control: none
@@ -18,12 +18,12 @@
     debug: true
 #0:red;1:blue
     detect_color: 0
-    binary_thres: 80
+    binary_thres: 60
 
-    light.min_ratio: 0.1
+    light.min_ratio: 0.05
     armor.min_light_ratio: 0.8
 
-    classifier_threshold: 0.8
+    classifier_threshold: 0.95
     ignore_classes: ["negative"]
 
 /armor_tracker:
@@ -32,27 +32,31 @@
     max_armor_distance: 10.0
 
     ekf:
-      sigma2_q_xyz: 0.05
-      sigma2_q_yaw: 5.0
-      sigma2_q_r: 80.0
+      sigma2_q_xy: 0.5
+      sigma2_q_z: 0.05
+      sigma2_q_yaw: 10.0
+      sigma2_q_r: 10.0
 
       r_xyz_factor: 4e-4
       r_yaw: 5e-3
-      r_radius: 0.01
+      r_radius: 0.1
 
     tracker:
       max_match_distance: 0.5
-      max_match_yaw_diff: 1.0
+      max_match_yaw_diff: 0.5
 
       tracking_thres: 5
-      lost_time_thres: 1.0
+      lost_time_thres: 0.3
 
 /ballistic_calculation:
   ros__parameters:
     iteration_coeffcient_first: 0.1  
     iteration_coeffcient_second: 0.05
     air_resistence: 0.1
-    bullet_speed: 30.0
-    swich_stategy_1: 30.0
-    swich_stategy_2: 120.0
-    max_v_yaw_PTZ: 1.0
+    ifFireK: 0.02
+    bullet_speed: 26.0
+    swich_stategy_1: 5.0
+    swich_stategy_2: 30.0
+    max_v_yaw_PTZ: 1.2
+    xyz: [0.03, 0.0, 0.0]
+    rpy: [0.0, 0.038, 0.0]

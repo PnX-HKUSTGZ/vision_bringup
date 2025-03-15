@@ -1,0 +1,25 @@
+topic_recorder:
+  output_dir: ./src/topic-recorder/docs
+  topics: 
+    - name: /image_raw
+      type: image
+      format: mp4
+      fps: 30
+    - name: /detect_armors
+      type: data
+      format: 
+        - variables[0]:
+          - name: armor[0].number
+          - type: string
+        - variables[1]:
+          - name: type
+          - type: string
+    - name: /armor_tracker/track_result
+      type: data
+      format: 
+        - variables[0]:
+          - name: armor_number
+          - type: int
+        - variables[1]:
+          - name: armor_type
+          - type: string

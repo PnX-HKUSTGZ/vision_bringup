@@ -114,7 +114,17 @@ def generate_launch_description():
         actions=[recorder_node],
     )
 
-    return LaunchDescription([
+    delay_rune_solver_node = TimerAction(
+        period=2.0,
+        actions=[rune_solver_node],
+    )
+
+    delay_rune_ballistic_node = TimerAction(
+        period=2.5,
+        actions=[rune_ballistic_node],
+    )
+
+    launch_description_list = [
         robot_state_publisher,
         cam_detector,
         delay_serial_node,

@@ -18,7 +18,8 @@
     pitch: 0.0
     yaw: 180.0
     vision_mode: 2 # 0:斜坡车 1:平地车 2:小符 3:大符
-
+    color: 0 # 0:红色 1:蓝色
+    has_rune: true
 /armor_detector:
   ros__parameters:
     debug: true

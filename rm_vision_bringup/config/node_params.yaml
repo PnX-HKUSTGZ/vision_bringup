@@ -95,4 +95,4 @@
     bullet_speed: 30.0
     ifFireK: 0.02
     odom2gun:
-      xyz: [0.03, 0.0, 0.0]
+      [0.03, 0.0, 0.0, 0.0, 0.0, 0.0] # [x, y, z, roll, pitch, yaw]

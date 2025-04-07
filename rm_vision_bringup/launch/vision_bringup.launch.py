@@ -129,11 +129,12 @@ def generate_launch_description():
         cam_detector,
         delay_serial_node,
         delay_tracker_node,
-        delay_recorder_node,
         delay_ballistic_node,
     ]
     if launch_params['rune']:
         launch_description_list.append(delay_rune_solver_node)
         launch_description_list.append(delay_rune_ballistic_node)
+    if launch_params['enable_recorder']:
+        launch_description_list.append(delay_recorder_node)
 
     return LaunchDescription(launch_description_list)

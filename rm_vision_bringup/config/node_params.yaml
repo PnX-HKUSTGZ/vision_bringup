@@ -19,7 +19,7 @@
     yaw: 180.0
     vision_mode: 1 # 0:斜坡车 1:平地车 2:小符 3:大符
     color: 0 # 0:红色 1:蓝色
-    has_rune: true
+    has_rune: false
 /armor_detector:
   ros__parameters:
     debug: true
@@ -54,6 +54,13 @@
 
       tracking_thres: 5
       lost_time_thres: 0.3
+
+    score:
+      w_distance: 0.3        # 3D距离评分权重
+      w_tracking: 0.2        # 追踪状态评分权重
+      w_size: 0.2            # 装甲板大小评分权重
+      w_history: 0.1         # 历史评分权重
+      w_twoD_distance: 0.2   # 2D图像中心距离评分权重
 
 /ballistic_calculation:
   ros__parameters:

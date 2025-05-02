@@ -16,8 +16,8 @@
   ros__parameters:
     roll: 0.0
     pitch: 0.0
-    yaw: 180.0
-    vision_mode: 1 # 0:斜坡车 1:平地车 2:小符 3:大符
+    yaw: 0.0
+    vision_mode: 1 # 0-outpost 6-guard 7-base 8-rune
     color: 0 # 0:红色 1:蓝色
     has_rune: true
 /armor_detector:

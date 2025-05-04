@@ -12,7 +12,7 @@ serial_log_level: INFO
 # true: 读取视频 false: 读取相机
 video_play: true
 # true: 开启打符 false：关闭打符
-rune: true
+rune: false
 # true: 虚拟下位机 false: 实车 
 virtual_serial: true
 # true: 开启录制 false: 关闭录制

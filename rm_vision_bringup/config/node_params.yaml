@@ -34,7 +34,7 @@
 
 /armor_tracker:
   ros__parameters:
-    target_frame: odom
+    target_frame: odom_aim
     max_armor_distance: 10.0
     debug: true
 

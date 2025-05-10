@@ -56,17 +56,16 @@
       lost_time_thres: 0.3
 
     score:
-      w_distance: 0.3        # 3D距离评分权重
-      w_tracking: 0.2        # 追踪状态评分权重
-      w_size: 0.2            # 装甲板大小评分权重
-      w_history: 0.1         # 历史评分权重
-      w_twoD_distance: 0.2   # 2D图像中心距离评分权重
+      w_distance: 0.5       # 3D距离评分权重
+      w_twoD_distance: 0.5   # 2D图像中心距离评分权重
+      #成绩计算逻辑score = (w_distance * distance + w_twoD_distance * twoD_distance)*state_score
+      #其中state_score为跟踪状态评分(完全lost=0,跟踪中1)
 
 /ballistic_calculation:
   ros__parameters:
     iteration_coeffcient_first: 0.1  
     iteration_coeffcient_second: 0.05
-    air_resistence: 0.1
+    air_resistence: 0.038 #小弹丸0.038 大弹丸 0.019
     ifFireK: 0.02
     stop_fire_time: 0.1
     fire_delay: 0.0

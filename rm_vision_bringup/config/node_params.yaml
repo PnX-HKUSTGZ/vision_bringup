@@ -3,7 +3,9 @@
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
     exposure_time: 2500
     gain: 5.0
-
+/video_reader_node:
+  ros__parameters:
+    camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
 /serial_driver:
   ros__parameters:
     timestamp_offset: -0.0025
@@ -72,7 +74,7 @@
     bullet_speed: 26.0
     swich_stategy_1: 5.0
     swich_stategy_2: 30.0
-    max_v_yaw_PTZ: 1.2
+    max_v_yaw_gimble: 1.2
     xyz: [0.03, 0.0, 0.0]
     rpy: [0.0, 0.038, 0.0]
 /rune_detector:
@@ -98,11 +100,3 @@
     ekf:
       q: [4e-4, 1e-4, 1e-4, 1e-4]
       r: [4e-2, 1e-2, 1e-2, 1e-2]
-/rune_ballistic:
-  ros__parameters:
-    iteration_coeffcient: 0.05
-    air_resistence: 0.1
-    bullet_speed: 30.0
-    ifFireK: 0.02
-    odom2gun:
-      [0.03, 0.0, 0.0, 0.0, 0.0, 0.0] # [x, y, z, roll, pitch, yaw]

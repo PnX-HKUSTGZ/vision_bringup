@@ -39,6 +39,7 @@ def generate_launch_description():
             composable_node_descriptions=node_list,
             output='both',
             emulate_tty=True,
+            additional_env={'LD_LIBRARY_PATH': '/home/mo/pnx_autoaim/third_party_install/lib:' + os.environ.get('LD_LIBRARY_PATH', '')},
             ros_arguments=['--ros-args', ],
         )
         return TimerAction(

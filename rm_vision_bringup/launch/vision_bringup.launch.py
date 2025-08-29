@@ -31,6 +31,9 @@ def generate_launch_description():
 
     def get_camera_detector_container(*nodes):
         node_list = list(nodes)
+        workspace_root =os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.join(get_package_share_directory('rm_vision_bringup'))))))
+        third_party_lib_path = os.path.join(workspace_root, 'third_party_install', 'lib')
+        
         container = ComposableNodeContainer(
             name='camera_detector_container',
             namespace='',
@@ -38,8 +41,8 @@ def generate_launch_description():
             executable='component_container_mt',
             composable_node_descriptions=node_list,
             output='both',
-            additional_env={'LD_LIBRARY_PATH': '/home/mo/pnx_autoaim/third_party_install/lib:' + os.environ.get('LD_LIBRARY_PATH', '')},
             emulate_tty=True,
+            additional_env={'LD_LIBRARY_PATH': third_party_lib_path + ':' + os.environ.get('LD_LIBRARY_PATH', '')},
             ros_arguments=['--ros-args', ],
         )
         return TimerAction(

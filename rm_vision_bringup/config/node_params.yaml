@@ -3,6 +3,23 @@
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
     exposure_time: 2500
     gain: 5.0
+/wide_camera_node:
+  ros__parameters:
+    video_device: "/dev/video0"
+    framerate: 30.0
+    camera_frame_id: "wide_cam"
+    pixel_format: "mjpeg2rgb"  # see usb_cam/supported_formats for list of supported formats
+    av_device_format: "YUV422P"
+    image_width: 1920
+    image_height: 1080
+    camera_info_url: "package://usb_cam/config/camera_info.yaml"
+    # video_device: /dev/video0  # 请根据实际设备号修改:v4l2-ctl --list-devices
+    # camera_info_url: package://rm_vision_bringup/config/wide_camera_info.yaml
+    # pixel_format: mjpeg2rgb
+    # image_width: 1920
+    # image_height: 1080
+    # camera_frame_id: wide_cam
+    # framerate: 30.0
 /video_reader_node:
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
@@ -22,7 +39,22 @@
     vision_mode: 1 # 0-outpost 6-guard 7-base 8-rune
     color: 0 # 0:红色 1:蓝色
     has_rune: false
-/armor_detector:
+/armor_detector_main:
+  ros__parameters:
+    debug: true
+    detect_color: 0 #0:red;1:blue
+
+    binary_thres: 60
+    light.min_ratio: 0.05
+    armor.min_light_ratio: 0.8
+    classifier_threshold: 0.95
+    ignore_classes: ["negative"]
+    
+    ai_model_path: "/model/0526.onnx"  # 相对于包的路径
+    ai_device: "CPU"  # 可选: CPU, GPU, AUTO
+    ai_conf_threshold: 0.65  # 置信度阈值
+    ai_nms_threshold: 0.45   # NMS阈值
+/armor_detector_wide:
   ros__parameters:
     debug: true
     detect_color: 0 #0:red;1:blue

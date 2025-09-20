@@ -57,13 +57,39 @@ def generate_launch_description():
         parameters=[node_params],
         extra_arguments=[{'use_intra_process_comms': True}]
         )
-    armor_detector_node = ComposableNode(
-                    package='armor_detector',
-                    plugin='rm_auto_aim::ArmorDetectorNode',
-                    name='armor_detector',
-                    parameters=[node_params, {'use_ai_detector': True}],
-                    extra_arguments=[{'use_intra_process_comms': True}]
-                )
+    # armor_detector_node = ComposableNode(
+    #                 package='armor_detector',
+    #                 plugin='rm_auto_aim::ArmorDetectorNode',
+    #                 name='armor_detector',
+    #                 parameters=[node_params, {'use_ai_detector': True}],
+    #                 extra_arguments=[{'use_intra_process_comms': True}]
+    #             )
+    #改为双镜头
+    armor_detector_node_main = ComposableNode(
+        package='armor_detector',
+        plugin='rm_auto_aim::ArmorDetectorNode',
+        name='armor_detector_main',
+        parameters=[node_params, {
+            'image_topic': '/image_raw',
+            'camera_info_topic': '/camera_info',
+            'result_topic': '/detector/armors',
+            'use_ai_detector': True
+        }],
+        extra_arguments=[{'use_intra_process_comms': True}]
+    )
+
+    armor_detector_node_wide = ComposableNode(
+        package='armor_detector',
+        plugin='rm_auto_aim::ArmorDetectorNode',
+        name='armor_detector_wide',
+        parameters=[node_params, {
+            'image_topic': '/wide_cam/image_raw',
+            'camera_info_topic': '/wide_cam/camera_info',
+            'result_topic': '/wide_detector/armors',
+            'use_ai_detector': True
+        }],
+        extra_arguments=[{'use_intra_process_comms': True}]
+    )
     
     # 串口
     if launch_params['virtual_serial']:
@@ -89,13 +115,51 @@ def generate_launch_description():
     
     if launch_params['video_play']:
         image_node = get_video_reader_node('video_reader', 'video_reader::VideoReaderNode')
+        try:
+            wide_camera_node = Node(
+                package='usb_cam',
+                executable='usb_cam_node_exe',
+                name='wide_camera_node',
+                parameters=[node_params],  
+                remappings=[
+                    ('/image_raw', '/wide_cam/image_raw'),
+                    ('/camera_info', '/wide_cam/camera_info')
+                ],
+                output='screen'
+            )
+        except Exception as e:
+            print(f"Failed to create wide_camera_node: {e}")
+            wide_camera_node = None
+            
     else:
         image_node = get_camera_node('hik_camera', 'hik_camera::HikCameraNode')
+        # 广角相机节点（用 v4l2_camera 驱动，需单独 Node 启动）
+        wide_camera_node = Node(
+                package='usb_cam',
+                executable='usb_cam_node_exe',
+                name='wide_camera_node',
+                parameters=[node_params],  
+                remappings=[
+                    ('/image_raw', '/wide_cam/image_raw'),
+                    ('/camera_info', '/wide_cam/camera_info')
+                ],
+                output='screen'
+                
+            )
         
     if launch_params['rune']:
-        cam_detector = get_camera_detector_container(image_node, armor_detector_node, rune_detector_node)
+        cam_detector = get_camera_detector_container(
+            image_node, 
+            armor_detector_node_main, 
+            armor_detector_node_wide, 
+            rune_detector_node
+        )
     else:
-        cam_detector = get_camera_detector_container(image_node, armor_detector_node)
+        cam_detector = get_camera_detector_container(
+            image_node,
+            armor_detector_node_main, 
+            armor_detector_node_wide
+        )
 
 
     delay_serial_node = TimerAction(
@@ -125,6 +189,7 @@ def generate_launch_description():
 
     launch_description_list = [
         robot_state_publisher,
+        wide_camera_node,
         cam_detector,
         delay_serial_node,
         delay_tracker_node,

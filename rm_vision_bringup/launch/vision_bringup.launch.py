@@ -29,13 +29,13 @@ def generate_launch_description():
             extra_arguments=[{'use_intra_process_comms': True}]
         )
 
-    def get_camera_detector_container(*nodes):
+    def get_camera_detector_container(container_name='camera_detector_container', *nodes):
         node_list = list(nodes)
         workspace_root =os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.join(get_package_share_directory('rm_vision_bringup'))))))
         third_party_lib_path = os.path.join(workspace_root, 'third_party_install', 'lib')
         
         container = ComposableNodeContainer(
-            name='camera_detector_container',
+            name= container_name,
             namespace='',
             package='rclcpp_components',
             executable='component_container_mt',
@@ -73,7 +73,8 @@ def generate_launch_description():
             'image_topic': '/image_raw',
             'camera_info_topic': '/camera_info',
             'result_topic': '/detector/armors',
-            'use_ai_detector': True
+            'result_img_topic': '/detector_main/result_img', 
+            'use_ai_detector': False
         }],
         extra_arguments=[{'use_intra_process_comms': True}]
     )
@@ -86,7 +87,8 @@ def generate_launch_description():
             'image_topic': '/wide_cam/image_raw',
             'camera_info_topic': '/wide_cam/camera_info',
             'result_topic': '/wide_detector/armors',
-            'use_ai_detector': True
+            'result_img_topic': '/detector_wide/result_img',
+            'use_ai_detector': False
         }],
         extra_arguments=[{'use_intra_process_comms': True}]
     )
@@ -115,50 +117,46 @@ def generate_launch_description():
     
     if launch_params['video_play']:
         image_node = get_video_reader_node('video_reader', 'video_reader::VideoReaderNode')
-        try:
-            wide_camera_node = Node(
-                package='usb_cam',
-                executable='usb_cam_node_exe',
-                name='wide_camera_node',
-                parameters=[node_params],  
-                remappings=[
-                    ('/image_raw', '/wide_cam/image_raw'),
-                    ('/camera_info', '/wide_cam/camera_info')
-                ],
-                output='screen'
-            )
-        except Exception as e:
-            print(f"Failed to create wide_camera_node: {e}")
-            wide_camera_node = None
+        wide_camera_node = get_video_reader_node('video_reader', 'video_reader::VideoReaderNode')
             
+        
     else:
         image_node = get_camera_node('hik_camera', 'hik_camera::HikCameraNode')
-        # 广角相机节点（用 v4l2_camera 驱动，需单独 Node 启动）
-        wide_camera_node = Node(
-                package='usb_cam',
-                executable='usb_cam_node_exe',
-                name='wide_camera_node',
-                parameters=[node_params],  
-                remappings=[
-                    ('/image_raw', '/wide_cam/image_raw'),
-                    ('/camera_info', '/wide_cam/camera_info')
-                ],
-                output='screen'
-                
-            )
+        wide_camera_node = ComposableNode(
+            package='usb_cam',
+            plugin='usb_cam::UsbCamNode',  # 使用组件插件名称
+            name='wide_camera_node',
+            parameters=[node_params],
+            remappings=[
+                ('/image_raw', '/wide_cam/image_raw'),
+                ('/camera_info', '/wide_cam/camera_info')
+            ],
+            extra_arguments=[{'use_intra_process_comms': True}]
+        )
         
     if launch_params['rune']:
         cam_detector = get_camera_detector_container(
+            'main_camera_container',
             image_node, 
-            armor_detector_node_main, 
-            armor_detector_node_wide, 
+            armor_detector_node_main,  
+            rune_detector_node
+        )
+        cam_detector_wide = get_camera_detector_container(
+            'wide_camera_container',
+            wide_camera_node,
+            armor_detector_node_wide,
             rune_detector_node
         )
     else:
         cam_detector = get_camera_detector_container(
+            'main_camera_container',
             image_node,
             armor_detector_node_main, 
-            armor_detector_node_wide
+        )
+        cam_detector_wide = get_camera_detector_container(
+            'wide_camera_container',
+            wide_camera_node,
+            armor_detector_node_wide,
         )
 
 
@@ -189,8 +187,8 @@ def generate_launch_description():
 
     launch_description_list = [
         robot_state_publisher,
-        wide_camera_node,
         cam_detector,
+        cam_detector_wide,
         delay_serial_node,
         delay_tracker_node,
         delay_ballistic_node,

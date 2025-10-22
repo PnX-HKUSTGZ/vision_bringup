@@ -10,7 +10,11 @@ launch_params = yaml.safe_load(open(os.path.join(
 
 robot_description = Command(['xacro ', os.path.join(
     get_package_share_directory('rm_gimbal_description'), 'urdf', 'rm_gimbal.urdf.xacro'),
-    ' xyz:=', launch_params['odom2camera']['xyz'], ' rpy:=', launch_params['odom2camera']['rpy']])
+    ' xyz:=', launch_params['odom2camera']['xyz'],
+    ' rpy:=', launch_params['odom2camera']['rpy'],
+    ' wide_xyz:=', launch_params['odom2wide_camera']['xyz'],    # 添加广角相机 xyz
+    ' wide_rpy:=', launch_params['odom2wide_camera']['rpy']
+    ])
 
 robot_state_publisher = Node(
     package='robot_state_publisher',

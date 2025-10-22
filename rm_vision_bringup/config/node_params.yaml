@@ -13,6 +13,11 @@
     image_width: 1920
     image_height: 1080
     camera_info_url: "package://usb_cam/config/camera_info.yaml"
+    autoexposure: false     # 禁用自动曝光
+    exposure: 1              # 曝光时间，单位通常是毫秒或百分比
+    brightness: 0         # 亮度设置(0-100)
+    contrast: 50              # 对比度设置(0-100)
+    gain: 5                  # 增益设置
     # video_device: /dev/video0  # 请根据实际设备号修改:v4l2-ctl --list-devices
     # camera_info_url: package://rm_vision_bringup/config/wide_camera_info.yaml
     # pixel_format: mjpeg2rgb
@@ -26,7 +31,7 @@
 /serial_driver:
   ros__parameters:
     timestamp_offset: -0.0025
-    device_name: /dev/ttyACM0
+    device_name: /dev/ttyACM1
     baud_rate: 115200
     flow_control: none
     parity: none

@@ -57,13 +57,13 @@ def generate_launch_description():
         parameters=[node_params],
         extra_arguments=[{'use_intra_process_comms': True}]
         )
-    armor_detector_node = ComposableNode(
-                    package='armor_detector',
-                    plugin='rm_auto_aim::ArmorDetectorNode',
-                    name='armor_detector',
-                    parameters=[node_params, {'use_ai_detector': True}],
-                    extra_arguments=[{'use_intra_process_comms': True}]
-                )
+    armor_detector_node = ComposableNode(    
+        package='armor_detector',
+        plugin='rm_auto_aim::ArmorDetectorNode',
+        name='armor_detector',
+        parameters=[node_params, {'use_ai_detector': True}],
+        extra_arguments=[{'use_intra_process_comms': True}]
+    )
     
     # 串口
     if launch_params['virtual_serial']:

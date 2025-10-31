@@ -1,12 +1,11 @@
-# MPC控制器配置参数
+# MPC控制器参数配置
 # 1. 基础偏移与开火阈值
-yaw_offset: 0.5          # 偏航补偿（度）
-pitch_offset: -1.2       # 俯仰补偿（度）
-fire_thresh: 0.02        # 开火阈值（弧度）
-decision_speed: 18.0     # 子弹速度决策阈值（m/s）
+yaw_offset: 0.0           # 偏航补偿（度）
+pitch_offset: 0.0         # 俯仰补偿（度）
+fire_thresh: 0.02         # 开火阈值（弧度）
+decision_speed: 18.0      # 子弹速度决策阈值（m/s）
 high_speed_delay_time: 0.05  # 高速子弹延迟（s）
 low_speed_delay_time: 0.08   # 低速子弹延迟（s）
-
 
 # 2. 偏航通道MPC配置（max_yaw_acc需≤云台电机最大加速度）
 max_yaw_acc: 5.0         # 最大偏航加速度（rad/s²）

@@ -61,7 +61,7 @@ def generate_launch_description():
         package='armor_detector',
         plugin='rm_auto_aim::ArmorDetectorNode',
         name='armor_detector',
-        parameters=[node_params, {'use_ai_detector': True}],
+        parameters=[node_params, {'use_ai_detector': False}],
         extra_arguments=[{'use_intra_process_comms': True}]
     )
     

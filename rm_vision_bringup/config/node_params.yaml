@@ -10,14 +10,15 @@
     camera_frame_id: "wide_cam"
     pixel_format: "mjpeg2rgb"  # see usb_cam/supported_formats for list of supported formats
     av_device_format: "YUV422P"
-    image_width: 1920
-    image_height: 1080
-    camera_info_url: "package://usb_cam/config/camera_info.yaml"
-    autoexposure: false     # 禁用自动曝光
-    exposure: 1              # 曝光时间，单位通常是毫秒或百分比
-    brightness: 0         # 亮度设置(0-100)
-    contrast: 50              # 对比度设置(0-100)
-    gain: 5                  # 增益设置
+    image_width: 1280
+    image_height: 720
+    camera_info_url: "package://usb_cam/config/camera_info.yaml" 
+    brightness: 0
+    exposure: 50
+    contrast: 20
+    gamma: 40
+    auto_white_balance: true
+          
     # video_device: /dev/video0  # 请根据实际设备号修改:v4l2-ctl --list-devices
     # camera_info_url: package://rm_vision_bringup/config/wide_camera_info.yaml
     # pixel_format: mjpeg2rgb
@@ -36,6 +37,7 @@
     flow_control: none
     parity: none
     stop_bits: "1"
+    wide_cam: false
 /virtual_serial: #虚拟串口
   ros__parameters:
     roll: 0.0
@@ -44,6 +46,7 @@
     vision_mode: 1 # 0-outpost 6-guard 7-base 8-rune
     color: 0 # 0:红色 1:蓝色
     has_rune: false
+    wide_cam: true
 /armor_detector_main:
   ros__parameters:
     debug: true
@@ -56,7 +59,7 @@
     ignore_classes: ["negative"]
     
     ai_model_path: "/model/0526.onnx"  # 相对于包的路径
-    ai_device: "CPU"  # 可选: CPU, GPU, AUTO
+    ai_device: "GPU"  # 可选: CPU, GPU, AUTO
     ai_conf_threshold: 0.65  # 置信度阈值
     ai_nms_threshold: 0.45   # NMS阈值
 /armor_detector_wide:
@@ -64,7 +67,7 @@
     debug: true
     detect_color: 0 #0:red;1:blue
 
-    binary_thres: 60
+    binary_thres: 100
     light.min_ratio: 0.05
     armor.min_light_ratio: 0.8
     classifier_threshold: 0.95

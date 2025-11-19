@@ -74,7 +74,7 @@ def generate_launch_description():
             'camera_info_topic': '/camera_info',
             'result_topic': '/detector/armors',
             'result_img_topic': '/detector_main/result_img', 
-            'use_ai_detector': False
+            'use_ai_detector': True
         }],
         extra_arguments=[{'use_intra_process_comms': True}]
     )
@@ -141,23 +141,26 @@ def generate_launch_description():
             armor_detector_node_main,  
             rune_detector_node
         )
-        cam_detector_wide = get_camera_detector_container(
-            'wide_camera_container',
-            wide_camera_node,
-            armor_detector_node_wide,
-            rune_detector_node
-        )
+        if launch_params['wide_cam']:
+            cam_detector_wide = get_camera_detector_container(
+                'wide_camera_container',
+                wide_camera_node,
+                armor_detector_node_wide,
+                rune_detector_node
+            )
     else:
         cam_detector = get_camera_detector_container(
             'main_camera_container',
             image_node,
             armor_detector_node_main, 
         )
-        cam_detector_wide = get_camera_detector_container(
-            'wide_camera_container',
-            wide_camera_node,
-            armor_detector_node_wide,
-        )
+        if launch_params['wide_cam']:
+            cam_detector_wide = get_camera_detector_container(
+                'wide_camera_container',
+                wide_camera_node,
+                armor_detector_node_wide,
+            )
+    
 
 
     delay_serial_node = TimerAction(
@@ -184,15 +187,23 @@ def generate_launch_description():
         period=2.0,
         actions=[rune_solver_node],
     )
-
-    launch_description_list = [
-        robot_state_publisher,
-        cam_detector,
-        cam_detector_wide,
-        delay_serial_node,
-        delay_tracker_node,
-        delay_ballistic_node,
-    ]
+    if launch_params['wide_cam']:
+        launch_description_list = [
+            robot_state_publisher,
+            cam_detector,
+            cam_detector_wide,
+            delay_serial_node,
+            delay_tracker_node,
+            delay_ballistic_node,
+        ]
+    else:
+        launch_description_list = [
+            robot_state_publisher,
+            cam_detector,
+            delay_serial_node,
+            delay_tracker_node,
+            delay_ballistic_node,
+        ]
     if launch_params['rune']:
         launch_description_list.append(delay_rune_solver_node)
     if launch_params['enable_recorder']:

@@ -2,22 +2,36 @@
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
     exposure_time: 2500
+    camera_frame_id: "camera_link"
     gain: 5.0
 /wide_camera_node:
   ros__parameters:
-    video_device: "/dev/video2"
-    framerate: 30.0
-    camera_frame_id: "wide_cam"
-    pixel_format: "mjpeg2rgb"  # see usb_cam/supported_formats for list of supported formats
-    av_device_format: "YUV422P"
-    image_width: 1280
-    image_height: 720
+    video_device: "/dev/video0"
+    camera_frame_id: "wide_cam_link"
     camera_info_url: package://rm_vision_bringup/config/wide_camera_info.yaml
+    framerate: 30.0
+    
+    
+    pixel_format: "yuyv"  # see usb_cam/supported_formats for list of supported formats
+    image_size: [640,480]  # 分辨率设置为 
+    
     brightness: 0
-    exposure: 50
     contrast: 20
-    gamma: 40
-    auto_white_balance: true
+    gain: 70
+    #gamma: 70
+
+    # --- 白平衡 
+    white_balance_automatic: true # 关闭自动白平衡
+    #white_balance_temperature: 4600 # (min=2800 max=6500) 根据场地灯光调整，4600-5000通常是冷白光
+
+    # --- 对焦 (机器视觉必须关闭自动对焦！) ---
+    focus_automatic_continuous: false # 必须 False，否则运动模糊严重
+    focus_absolute: 0             # (min=0 max=1023) 手动锁焦，0 通常是无穷远，需根据实际距离测试
+
+    # --- 曝光 (建议手动固定，防止灯条过曝变白) ---
+    # auto_exposure 菜单值: 1=Manual(手动), 3=Aperture Priority(自动)
+    auto_exposure: 1               # 设为 1 开启手动曝光模式
+    exposure_time_absolute: 50    # (min=50 max=10000) 曝光时间。值越小，运动模糊越少，但画面越暗
           
     # video_device: /dev/video0  # 请根据实际设备号修改:v4l2-ctl --list-devices
     # camera_info_url: package://rm_vision_bringup/config/wide_camera_info.yaml
@@ -37,7 +51,6 @@
     flow_control: none
     parity: none
     stop_bits: "1"
-    wide_cam: false
 /virtual_serial: #虚拟串口
   ros__parameters:
     roll: 0.0

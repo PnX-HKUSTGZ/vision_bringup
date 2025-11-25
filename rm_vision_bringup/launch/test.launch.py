@@ -114,54 +114,22 @@ def generate_launch_description():
             parameters=[node_params],
             ros_arguments=['--ros-args', ],
         )
-    
-    if launch_params['video_play']:
-        image_node = get_video_reader_node('video_reader', 'video_reader::VideoReaderNode')
-        wide_camera_node = get_video_reader_node('video_reader', 'video_reader::VideoReaderNode')
-            
-        
-    else:
-        image_node = get_camera_node('hik_camera', 'hik_camera::HikCameraNode')
-        wide_camera_node = ComposableNode(
-            package='v4l2_camera',
-            plugin='v4l2_camera::V4L2Camera',  # 切换到 v4l2_camera 的插件
-            name='wide_camera_node',
-            parameters=[node_params],
-            remappings=[
-                ('/image_raw', '/wide_cam/image_raw'),
-                ('/camera_info', '/wide_cam/camera_info')
-            ],
-            extra_arguments=[{'use_intra_process_comms': True}]
-        )
-        
-        
-        
-    if launch_params['rune']:
-        cam_detector = get_camera_detector_container(
-            'main_camera_container',
-            image_node, 
-            armor_detector_node_main,  
-            rune_detector_node
-        )
-        if launch_params['wide_cam']:
-            cam_detector_wide = get_camera_detector_container(
-                'wide_camera_container',
-                wide_camera_node,
-                armor_detector_node_wide,
-                rune_detector_node
-            )
-    else:
-        cam_detector = get_camera_detector_container(
-            'main_camera_container',
-            image_node,
-            armor_detector_node_main, 
-        )
-        if launch_params['wide_cam']:
-            cam_detector_wide = get_camera_detector_container(
-                'wide_camera_container',
-                wide_camera_node,
-                armor_detector_node_wide,
-            )
+    wide_camera_node = ComposableNode(
+        package='v4l2_camera',
+        plugin='v4l2_camera::V4L2Camera',  # 切换到 v4l2_camera 的插件
+        name='wide_camera_node',
+        parameters=[node_params],
+        remappings=[
+            ('/image_raw', '/wide_cam/image_raw'),
+            ('/camera_info', '/wide_cam/camera_info')
+        ],
+        extra_arguments=[{'use_intra_process_comms': True}]
+    )
+    cam_detector_wide = get_camera_detector_container(
+        'wide_camera_container',
+        wide_camera_node,
+        armor_detector_node_wide,
+    )
     
 
 
@@ -169,52 +137,9 @@ def generate_launch_description():
         period=1.5,
         actions=[serial_driver_node],
     )
-
-    delay_tracker_node = TimerAction(
-        period=2.0,
-        actions=[tracker_node],
-    )
-
-    delay_ballistic_node = TimerAction(
-        period=2.5,
-        actions=[ballistic_node],
-    )
-
-    delay_recorder_node = TimerAction(
-        period=2.4,
-        actions=[recorder_node],
-    )
-
-    delay_rune_solver_node = TimerAction(
-        period=2.0,
-        actions=[rune_solver_node],
-    )
-    if launch_params['wide_cam']:
-        # 给 wide_camera_container 加一个 3秒 的延时，避开主相机的启动高峰
-        delay_cam_detector_wide = TimerAction(
-            period=1.0, 
-            actions=[cam_detector_wide]
-        )
-    if launch_params['wide_cam']:
-        launch_description_list = [
-            robot_state_publisher,
-            cam_detector,
-            delay_cam_detector_wide,
-            delay_serial_node,
-            delay_tracker_node,
-            delay_ballistic_node,
-        ]
-    else:
-        launch_description_list = [
-            robot_state_publisher,
-            cam_detector,
-            delay_serial_node,
-            delay_tracker_node,
-            delay_ballistic_node,
-        ]
-    if launch_params['rune']:
-        launch_description_list.append(delay_rune_solver_node)
-    if launch_params['enable_recorder']:
-        launch_description_list.append(delay_recorder_node)
-
+    launch_description_list = [
+        robot_state_publisher,
+        cam_detector_wide, 
+        delay_serial_node
+    ]
     return LaunchDescription(launch_description_list)

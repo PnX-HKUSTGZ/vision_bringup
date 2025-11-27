@@ -75,12 +75,12 @@
     ifFireK: 0.02
     stop_fire_time: 0.1
     fire_delay: 0.0
-    bullet_speed: 26.0
+    bullet_speed: 21.0
     switch_stategy_1: 5.0
-    switch_stategy_2: 30.0
+    switch_stategy_2: 240.0
     max_v_yaw_gimble: 1.2
     xyz: [0.03, 0.0, 0.0]
-    rpy: [0.0, 0.038, 0.0]
+    rpy: [0.0, 0.0, 0.04]
 /rune_detector:
   ros__parameters:
       detect_color: 0

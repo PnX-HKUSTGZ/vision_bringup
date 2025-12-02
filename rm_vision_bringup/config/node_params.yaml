@@ -1,7 +1,7 @@
 /camera_node:
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
-    exposure_time: 2500
+    #exposure_time: 2500
     camera_frame_id: "camera_link"
     gain: 5.0
 /wide_camera_node:
@@ -13,7 +13,7 @@
     
     
     pixel_format: "yuyv"  # see usb_cam/supported_formats for list of supported formats
-    image_size: [640,480]  # 分辨率设置为 
+    image_size: [1280, 720]  # 分辨率设置为 
     
     brightness: 0
     contrast: 20

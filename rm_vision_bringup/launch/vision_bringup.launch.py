@@ -17,7 +17,12 @@ def generate_launch_description():
             package=package,
             plugin=plugin,
             name='camera_node',
-            parameters=[node_params],
+            parameters=[{
+                'camera_info_url': 'package://rm_vision_bringup/config/camera_info.yaml',
+                #'exposure_time': 2500,
+                'camera_frame_id': 'camera_link',
+                'gain': 5.0,
+            }],
             extra_arguments=[{'use_intra_process_comms': True}]
         )
     def get_video_reader_node(package, plugin):
@@ -44,6 +49,7 @@ def generate_launch_description():
             emulate_tty=True,
             additional_env={'LD_LIBRARY_PATH': third_party_lib_path + ':' + os.environ.get('LD_LIBRARY_PATH', '')},
             ros_arguments=['--ros-args', ],
+            #prefix=['xterm -e gdb --args'], # 用 gdb 调试
         )
         return TimerAction(
             period=2.0,

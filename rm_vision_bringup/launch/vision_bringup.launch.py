@@ -19,18 +19,24 @@ def generate_launch_description():
             name='camera_node',
             parameters=[{
                 'camera_info_url': 'package://rm_vision_bringup/config/camera_info.yaml',
-                #'exposure_time': 2500,
+                'exposure_time': 2500,
                 'camera_frame_id': 'camera_link',
                 'gain': 5.0,
             }],
             extra_arguments=[{'use_intra_process_comms': True}]
         )
-    def get_video_reader_node(package, plugin):
+    def get_video_reader_node(package, plugin, name='video_reader_node', remappings=None, extra_params=None):
+        # 合并参数：默认 node_params + 额外参数
+        params = [node_params]
+        if extra_params:
+            params.append(extra_params)
+
         return ComposableNode(
             package=package,
             plugin=plugin,
-            name='video_reader_node',
-            parameters=[node_params],
+            name=name,
+            parameters=params,
+            remappings=remappings,
             extra_arguments=[{'use_intra_process_comms': True}]
         )
 
@@ -76,11 +82,7 @@ def generate_launch_description():
         plugin='rm_auto_aim::ArmorDetectorNode',
         name='armor_detector_main',
         parameters=[node_params, {
-            'image_topic': '/image_raw',
-            'camera_info_topic': '/camera_info',
-            'result_topic': '/detector/armors',
-            'result_img_topic': '/detector_main/result_img', 
-            'use_ai_detector': True
+            'use_ai_detector': False
         }],
         extra_arguments=[{'use_intra_process_comms': True}]
     )
@@ -90,12 +92,17 @@ def generate_launch_description():
         plugin='rm_auto_aim::ArmorDetectorNode',
         name='armor_detector_wide',
         parameters=[node_params, {
-            'image_topic': '/wide_cam/image_raw',
-            'camera_info_topic': '/wide_cam/camera_info',
-            'result_topic': '/wide_detector/armors',
-            'result_img_topic': '/detector_wide/result_img',
             'use_ai_detector': False
         }],
+        remappings=[
+                ('/image_raw', '/wide_cam/image_raw'),
+                ('/camera_info', '/wide_cam/camera_info'),
+                ('/detector/binary_img', '/detector_wide/binary_img'),
+                ('/detector/number_img', '/detector_wide/number_img'),
+                ('/detector/result_img', '/detector_wide/result_img'),
+                ('/detector/armors', '/detector_wide/armors'),
+                ('/detector/marker', '/detector_wide/marker')
+            ],
         extra_arguments=[{'use_intra_process_comms': True}]
     )
     
@@ -122,8 +129,24 @@ def generate_launch_description():
         )
     
     if launch_params['video_play']:
-        image_node = get_video_reader_node('video_reader', 'video_reader::VideoReaderNode')
-        wide_camera_node = get_video_reader_node('video_reader', 'video_reader::VideoReaderNode')
+        # [修改] 主相机视频节点
+        image_node = get_video_reader_node(
+            'video_reader', 
+            'video_reader::VideoReaderNode',
+            name='video_reader_main'
+        )
+        
+        # [修改] 广角相机视频节点
+        # 注意：如果你想播放不同的视频，可以在这里传入 extra_params={'video_path': '/path/to/wide.mp4'}
+        wide_camera_node = get_video_reader_node(
+            'video_reader', 
+            'video_reader::VideoReaderNode',
+            name='video_reader_wide',
+            remappings=[
+                ('/image_raw', '/wide_cam/image_raw'),
+                ('/camera_info', '/wide_cam/camera_info')
+            ]
+        )
             
         
     else:
@@ -198,7 +221,7 @@ def generate_launch_description():
     if launch_params['wide_cam']:
         # 给 wide_camera_container 加一个 3秒 的延时，避开主相机的启动高峰
         delay_cam_detector_wide = TimerAction(
-            period=1.0, 
+            period=2.0, 
             actions=[cam_detector_wide]
         )
     if launch_params['wide_cam']:

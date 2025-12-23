@@ -17,7 +17,7 @@
     
     brightness: 0
     contrast: 20
-    gain: 70
+    gain: 100
     #gamma: 70
 
     # --- 白平衡 
@@ -31,7 +31,7 @@
     # --- 曝光 (建议手动固定，防止灯条过曝变白) ---
     # auto_exposure 菜单值: 1=Manual(手动), 3=Aperture Priority(自动)
     auto_exposure: 1               # 设为 1 开启手动曝光模式
-    exposure_time_absolute: 50    # (min=50 max=10000) 曝光时间。值越小，运动模糊越少，但画面越暗
+    exposure_time_absolute: 70    # (min=50 max=10000) 曝光时间。值越小，运动模糊越少，但画面越暗
           
     # video_device: /dev/video0  # 请根据实际设备号修改:v4l2-ctl --list-devices
     # camera_info_url: package://rm_vision_bringup/config/wide_camera_info.yaml
@@ -46,7 +46,7 @@
 /serial_driver:
   ros__parameters:
     timestamp_offset: -0.0025
-    device_name: /dev/ttyACM1
+    device_name: /dev/ttyACM0
     baud_rate: 115200
     flow_control: none
     parity: none

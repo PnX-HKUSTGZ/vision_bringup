@@ -3,7 +3,8 @@ import yaml
 
 from ament_index_python.packages import get_package_share_directory
 from launch.substitutions import Command
-from launch_ros.actions import Node
+from launch_ros.actions import Node, ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
 
 launch_params = yaml.safe_load(open(os.path.join(
     get_package_share_directory('rm_vision_bringup'), 'config', 'launch_params.yaml')))
@@ -26,13 +27,22 @@ robot_state_publisher = Node(
 node_params = os.path.join(
     get_package_share_directory('rm_vision_bringup'), 'config', 'node_params.yaml')
 
-tracker_node = Node(
-    package='armor_tracker',
-    executable='armor_tracker_node',
+tracker_node = ComposableNodeContainer(
+    name='armor_tracker_container',
+    namespace='',
+    package='rclcpp_components',
+    executable='component_container_mt',  # 多线程容器
     output='both',
     emulate_tty=True,
-    parameters=[node_params],
-    ros_arguments=['--log-level', 'armor_tracker:='+launch_params['tracker_log_level']],
+    composable_node_descriptions=[
+        ComposableNode(
+            package='armor_tracker',
+            plugin='rm_auto_aim::ArmorTrackerNode',
+            name='armor_tracker',
+            parameters=[node_params],
+            extra_arguments=[{'use_intra_process_comms': True}],
+        )
+    ],
 )
 
 ballistic_node = Node(

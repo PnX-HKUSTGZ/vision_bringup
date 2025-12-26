@@ -40,14 +40,14 @@ def generate_launch_description():
             extra_arguments=[{'use_intra_process_comms': True}]
         )
 
-    def get_camera_detector_container(container_name='camera_detector_container', *nodes):
+    def get_camera_detector_container(container_name='camera_detector_container', namespace='', *nodes):
         node_list = list(nodes)
         workspace_root =os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.join(get_package_share_directory('rm_vision_bringup'))))))
         third_party_lib_path = os.path.join(workspace_root, 'third_party_install', 'lib')
         
         container = ComposableNodeContainer(
             name= container_name,
-            namespace='',
+            namespace=namespace,
             package='rclcpp_components',
             executable='component_container_mt',
             composable_node_descriptions=node_list,
@@ -92,14 +92,26 @@ def generate_launch_description():
         plugin='rm_auto_aim::ArmorDetectorNode',
         name='armor_detector_wide',
         parameters=[node_params, {
-            'use_ai_detector': False
+            'use_ai_detector': True
         }],
         remappings=[
                 ('/image_raw', '/wide_cam/image_raw'),
+                ('/image_raw/compressed', '/wide_cam/image_raw/compressed'),
+                ('/image_raw/compressedDepth', '/wide_cam/image_raw/compressedDepth'),
+                ('/image_raw/theora', '/wide_cam/image_raw/theora'),
                 ('/camera_info', '/wide_cam/camera_info'),
                 ('/detector/binary_img', '/detector_wide/binary_img'),
+                ('/detector/binary_img/compressed', '/detector_wide/binary_img/compressed'),
+                ('/detector/binary_img/compressedDepth', '/detector_wide/binary_img/compressedDepth'),
+                ('/detector/binary_img/theora', '/detector_wide/binary_img/theora'),
                 ('/detector/number_img', '/detector_wide/number_img'),
+                ('/detector/number_img/compressed', '/detector_wide/number_img/compressed'),
+                ('/detector/number_img/compressedDepth', '/detector_wide/number_img/compressedDepth'),
+                ('/detector/number_img/theora', '/detector_wide/number_img/theora'),
                 ('/detector/result_img', '/detector_wide/result_img'),
+                ('/detector/result_img/compressed', '/detector_wide/result_img/compressed'),
+                ('/detector/result_img/compressedDepth', '/detector_wide/result_img/compressedDepth'),
+                ('/detector/result_img/theora', '/detector_wide/result_img/theora'),
                 ('/detector/armors', '/detector_wide/armors'),
                 ('/detector/marker', '/detector_wide/marker')
             ],
@@ -144,6 +156,9 @@ def generate_launch_description():
             name='video_reader_wide',
             remappings=[
                 ('/image_raw', '/wide_cam/image_raw'),
+                ('/image_raw/compressed', '/wide_cam/image_raw/compressed'),
+                ('/image_raw/compressedDepth', '/wide_cam/image_raw/compressedDepth'),
+                ('/image_raw/theora', '/wide_cam/image_raw/theora'),
                 ('/camera_info', '/wide_cam/camera_info')
             ]
         )
@@ -167,27 +182,27 @@ def generate_launch_description():
         
     if launch_params['rune']:
         cam_detector = get_camera_detector_container(
-            'main_camera_container',
+            'main_camera_container', 'main',
             image_node, 
             armor_detector_node_main,  
             rune_detector_node
         )
         if launch_params['wide_cam']:
             cam_detector_wide = get_camera_detector_container(
-                'wide_camera_container',
+                'wide_camera_container', 'wide',
                 wide_camera_node,
                 armor_detector_node_wide,
                 rune_detector_node
             )
     else:
         cam_detector = get_camera_detector_container(
-            'main_camera_container',
+            'main_camera_container', 'main',
             image_node,
             armor_detector_node_main, 
         )
         if launch_params['wide_cam']:
             cam_detector_wide = get_camera_detector_container(
-                'wide_camera_container',
+                'wide_camera_container', 'wide',
                 wide_camera_node,
                 armor_detector_node_wide,
             )

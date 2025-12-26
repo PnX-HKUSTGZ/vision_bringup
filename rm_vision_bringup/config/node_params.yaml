@@ -2,12 +2,11 @@
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
     #exposure_time: 2500
-    camera_frame_id: "camera_link"
     gain: 5.0
 /wide_camera_node:
   ros__parameters:
     video_device: "/dev/video0"
-    camera_frame_id: "wide_cam_link"
+    camera_frame_id: "wide_camera_optical_frame"
     camera_info_url: package://rm_vision_bringup/config/wide_camera_info.yaml
     framerate: 30.0
     
@@ -87,7 +86,7 @@
     ignore_classes: ["negative"]
     
     ai_model_path: "/model/0526.onnx"  # 相对于包的路径
-    ai_device: "CPU"  # 可选: CPU, GPU, AUTO
+    ai_device: "GPU"  # 可选: CPU, GPU, AUTO
     ai_conf_threshold: 0.65  # 置信度阈值
     ai_nms_threshold: 0.45   # NMS阈值
 
@@ -103,8 +102,8 @@
       sigma2_q_yaw: 10.0
       sigma2_q_r: 10.0
 
-      r_xyz_factor: 4e-4
-      r_yaw: 5e-3
+      r_xyz_factor: 0.0004
+      r_yaw: 0.005
       r_radius: 0.1
 
     tracker:

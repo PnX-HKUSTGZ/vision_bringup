@@ -3,17 +3,19 @@
 yaw_offset: 0.0           # 偏航补偿（度）
 pitch_offset: 0.0         # 俯仰补偿（度）
 fire_thresh: 0.02         # 开火阈值（弧度）
-decision_speed: 18.0      # 子弹速度决策阈值（m/s）
-high_speed_delay_time: 0.05  # 高速子弹延迟（s）
-low_speed_delay_time: 0.08   # 低速子弹延迟（s）
+decision_speed: 22.0      # 子弹速度决策阈值（m/s）
+high_speed_delay_time: 0.0  # 高速子弹延迟（s）
+low_speed_delay_time: 0.0   # 低速子弹延迟（s）
+min_switch_speed: 5.0    # 最小换装速度阈值
+max_switch_speed: 30.0    # 最大换装速度阈值
 
 # 2. 偏航通道MPC配置（max_yaw_acc需≤云台电机最大加速度）
-max_yaw_acc: 5.0         # 最大偏航加速度（rad/s²）
+max_yaw_acc: 3.0         # 最大偏航加速度（rad/s²）
 Q_yaw: [10.0, 1.0]       # [偏航角权重, 偏航角速度权重]，用于惩罚跟踪误差
-R_yaw: [0.1]             # 偏航控制量权重，用于惩罚控制量的剧烈变化
+R_yaw: [30.0]             # 偏航控制量权重，用于惩罚控制量的剧烈变化
 # 实际中两者通过构建对角矩阵 Q.asDiagonal() 和 R.asDiagonal() 融入优化目标函数，最终求解器会在 “跟踪精度” 和 “控制平滑性” 之间找到平衡
 
 # 3. 俯仰通道MPC配置（俯仰电机负载通常更大，max_pitch_acc可略小）
-max_pitch_acc: 3.0       # 最大俯仰加速度（rad/s²）
-Q_pitch: [15.0, 2.0]     # [俯仰角权重, 俯仰角速度权重]
-R_pitch: [0.2]           # 俯仰控制量权重
+max_pitch_acc: 1.0       # 最大俯仰加速度（rad/s²）
+Q_pitch: [0.5, 0.01]     # [俯仰角权重, 俯仰角速度权重]
+R_pitch: [50.0]           # 俯仰控制量权重

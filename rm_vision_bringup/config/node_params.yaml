@@ -42,6 +42,7 @@
 /video_reader_node:
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
+    video_path: "/docs/test4Armors.mp4"
 /serial_driver:
   ros__parameters:
     timestamp_offset: -0.0025

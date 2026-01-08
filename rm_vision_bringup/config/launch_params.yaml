@@ -10,10 +10,10 @@ serial_log_level: INFO
 
 # 设置启动参数
 # true: 读取视频 false: 读取相机
-video_play: true
+video_play: false
 # true: 开启打符 false：关闭打符 非必要保持常开
 rune: true
 # true: 虚拟下位机 false: 实车 
-virtual_serial: true
+virtual_serial: false
 # true: 开启录制 false: 关闭录制
 enable_recorder: false

@@ -36,16 +36,7 @@ ballistic_node = Node(
     executable='ballistic_calculation_node',
     output='screen',
     emulate_tty=True,
-    parameters=[
-        node_params,
-        {
-            'mpc_config_path': os.path.join(
-                get_package_share_directory('rm_vision_bringup'),
-                'config',
-                'mpc_params.yaml'
-            )
-        }
-    ],
+    parameters=[node_params],
     
 )
 

@@ -81,6 +81,16 @@
     max_v_yaw_gimble: 1.2
     xyz: [0.03, 0.0, 0.0]
     rpy: [0.0, -0.01, -0.02]
+    use_mpc_default: true
+    mpc_min_switch_speed: 5.0
+    mpc_max_switch_speed: 30.0
+    max_yaw_acc: 10.0
+    Q_yaw: [9e6, 0.0]
+    R_yaw: [1.0]
+    max_pitch_acc: 100.0
+    Q_pitch: [9e6, 0.0]
+    R_pitch: [1.0]
+
 /rune_detector:
   ros__parameters:
       detect_color: 0

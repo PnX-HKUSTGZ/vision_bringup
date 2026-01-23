@@ -12,7 +12,7 @@
     drop_old_frames: true
     
     
-    pixel_format: "yuyv"  # see usb_cam/supported_formats for list of supported formats
+    pixel_format: "yuyv"  # need to be supported formats
     image_size: [1280, 720]  # 分辨率设置为 
     
     brightness: 0
@@ -60,7 +60,7 @@
     vision_mode: 1 # 0-outpost 6-guard 7-base 8-rune
     color: 0 # 0:红色 1:蓝色
     has_rune: false
-    wide_cam: true
+    
 /armor_detector_main:
   ros__parameters:
     debug: true

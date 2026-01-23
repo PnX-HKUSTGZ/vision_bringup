@@ -127,7 +127,7 @@ def generate_launch_description():
             output='both',
             emulate_tty=True,
             parameters=[node_params],
-            ros_arguments=['--ros-args', '-p', 'has_rune:=true' if launch_params['rune'] else 'has_rune:=false'],
+            ros_arguments=['--ros-args', '-p', 'has_rune:=true' if launch_params['rune'] else 'has_rune:=false', '-p', 'wide_cam:=true' if launch_params['wide_cam'] else 'wide_cam:=false'],
         )
     else:
         serial_driver_node = Node(
@@ -137,7 +137,7 @@ def generate_launch_description():
             output='both',
             emulate_tty=True,
             parameters=[node_params],
-            ros_arguments=['--ros-args', ],
+            ros_arguments=['--ros-args', '-p', 'wide_cam:=true' if launch_params['wide_cam'] else 'wide_cam:=false'],
         )
     
     if launch_params['video_play']:
@@ -192,7 +192,7 @@ def generate_launch_description():
                 'wide_camera_container', 'wide',
                 wide_camera_node,
                 armor_detector_node_wide,
-                rune_detector_node
+                #rune_detector_node
             )
     else:
         cam_detector = get_camera_detector_container(
@@ -230,13 +230,13 @@ def generate_launch_description():
     )
 
     delay_rune_solver_node = TimerAction(
-        period=2.0,
+        period=3.0,
         actions=[rune_solver_node],
     )
     if launch_params['wide_cam']:
-        # 给 wide_camera_container 加一个 3秒 的延时，避开主相机的启动高峰
+        # 给 wide_camera_container 加一个 1秒 的延时，避开主相机的启动高峰
         delay_cam_detector_wide = TimerAction(
-            period=2.0, 
+            period=1.0, 
             actions=[cam_detector_wide]
         )
     if launch_params['wide_cam']:

@@ -18,8 +18,8 @@ video_play: false
 # true: 开启打符 false：关闭打符 非必要保持常开
 rune: true
 # true: 虚拟下位机 false: 实车 
-virtual_serial: false
+virtual_serial: true
 # true: 开启录制 false: 关闭录制
 enable_recorder: false
 #true:使用广角相机
-wide_cam: true
+wide_cam: false

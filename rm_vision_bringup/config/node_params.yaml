@@ -12,6 +12,7 @@
     flow_control: none
     parity: none
     stop_bits: "1"
+    pitch_imu_enabled: false
 /virtual_serial: #虚拟串口
   ros__parameters:
     roll: 0.0

@@ -16,6 +16,7 @@
   <depend>foxglove_bridge</depend>
   <depend>video_reader</depend>
   <depend>topic_recorder</depend>
+  <depend>v4l2_camera</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

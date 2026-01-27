@@ -6,7 +6,7 @@ sys.path.append(os.path.join(get_package_share_directory('rm_vision_bringup'), '
 
 def generate_launch_description():
 
-    from common import node_params, launch_params, robot_state_publisher, tracker_node ,ballistic_node, rune_solver_node, recorder_node
+    from common import node_params, launch_params,create_robot_state_publisher, tracker_node ,ballistic_node, rune_solver_node, recorder_node
     from launch_ros.descriptions import ComposableNode
     from launch_ros.actions import ComposableNodeContainer, Node
     from launch.actions import TimerAction, Shutdown
@@ -147,36 +147,37 @@ def generate_launch_description():
             'video_reader::VideoReaderNode',
             name='video_reader_main'
         )
-        
+        if launch_params['wide_cam']:
         # [修改] 广角相机视频节点
         # 注意：如果你想播放不同的视频，可以在这里传入 extra_params={'video_path': '/path/to/wide.mp4'}
-        wide_camera_node = get_video_reader_node(
-            'video_reader', 
-            'video_reader::VideoReaderNode',
-            name='video_reader_wide',
-            remappings=[
-                ('/image_raw', '/wide_cam/image_raw'),
-                ('/image_raw/compressed', '/wide_cam/image_raw/compressed'),
-                ('/image_raw/compressedDepth', '/wide_cam/image_raw/compressedDepth'),
-                ('/image_raw/theora', '/wide_cam/image_raw/theora'),
-                ('/camera_info', '/wide_cam/camera_info')
-            ]
-        )
+            wide_camera_node = get_video_reader_node(
+                'video_reader', 
+                'video_reader::VideoReaderNode',
+                name='video_reader_wide',
+                remappings=[
+                    ('/image_raw', '/wide_cam/image_raw'),
+                    ('/image_raw/compressed', '/wide_cam/image_raw/compressed'),
+                    ('/image_raw/compressedDepth', '/wide_cam/image_raw/compressedDepth'),
+                    ('/image_raw/theora', '/wide_cam/image_raw/theora'),
+                    ('/camera_info', '/wide_cam/camera_info')
+                ]
+            )
             
         
     else:
         image_node = get_camera_node('hik_camera', 'hik_camera::HikCameraNode')
-        wide_camera_node = ComposableNode(
-            package='v4l2_camera',
-            plugin='v4l2_camera::V4L2Camera',  # 切换到 v4l2_camera 的插件
-            name='wide_camera_node',
-            parameters=[node_params],
-            remappings=[
-                ('/image_raw', '/wide_cam/image_raw'),
-                ('/camera_info', '/wide_cam/camera_info')
-            ],
-            extra_arguments=[{'use_intra_process_comms': True}]
-        )
+        if launch_params['wide_cam']:
+            wide_camera_node = ComposableNode(
+                package='v4l2_camera',
+                plugin='v4l2_camera::V4L2Camera',  # 切换到 v4l2_camera 的插件
+                name='wide_camera_node',
+                parameters=[node_params],
+                remappings=[
+                    ('/image_raw', '/wide_cam/image_raw'),
+                    ('/camera_info', '/wide_cam/camera_info')
+                ],
+                extra_arguments=[{'use_intra_process_comms': True}]
+            )
         
         
         
@@ -233,15 +234,20 @@ def generate_launch_description():
         period=3.0,
         actions=[rune_solver_node],
     )
+    robot_state_publisher = create_robot_state_publisher('main')
     if launch_params['wide_cam']:
         # 给 wide_camera_container 加一个 1秒 的延时，避开主相机的启动高峰
         delay_cam_detector_wide = TimerAction(
             period=1.0, 
             actions=[cam_detector_wide]
         )
-    if launch_params['wide_cam']:
+        delay_robot_state_publisher_wide = TimerAction(
+            period=1.0,
+            actions=[create_robot_state_publisher('wide')]
+        )
         launch_description_list = [
             robot_state_publisher,
+            delay_robot_state_publisher_wide,
             cam_detector,
             delay_cam_detector_wide,
             delay_serial_node,

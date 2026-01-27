@@ -9,20 +9,20 @@ from launch_ros.descriptions import ComposableNode
 launch_params = yaml.safe_load(open(os.path.join(
     get_package_share_directory('rm_vision_bringup'), 'config', 'launch_params.yaml')))
 
-robot_description = Command(['xacro ', os.path.join(
-    get_package_share_directory('rm_gimbal_description'), 'urdf', 'rm_gimbal.urdf.xacro'),
-    ' xyz:=', launch_params['odom2camera']['xyz'],
-    ' rpy:=', launch_params['odom2camera']['rpy'],
-    ' wide_xyz:=', launch_params['odom2wide_camera']['xyz'],    # 添加广角相机 xyz
-    ' wide_rpy:=', launch_params['odom2wide_camera']['rpy']
-    ])
-
-robot_state_publisher = Node(
-    package='robot_state_publisher',
-    executable='robot_state_publisher',
-    parameters=[{'robot_description': robot_description,
-                 'publish_frequency': 1000.0}]
-)
+def create_robot_state_publisher(cam_id):
+    robot_description = Command(['xacro ', os.path.join(
+        get_package_share_directory('rm_gimbal_description'), 'urdf', 'rm_gimbal.urdf.xacro'),
+        ' xyz:=', launch_params[f'odom2camera_{cam_id}']['xyz'], 
+        ' rpy:=', launch_params[f'odom2camera_{cam_id}']['rpy'],
+        ' camera_name:=', f'camera_{cam_id}'])
+    
+    return Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name=f'robot_state_publisher_{cam_id}',
+        parameters=[{'robot_description': robot_description,
+                     'publish_frequency': 1000.0}],
+    )
 
 node_params = os.path.join(
     get_package_share_directory('rm_vision_bringup'), 'config', 'node_params.yaml')

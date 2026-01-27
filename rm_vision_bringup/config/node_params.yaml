@@ -6,7 +6,7 @@
 /wide_camera_node:
   ros__parameters:
     video_device: "/dev/video0"
-    camera_frame_id: "wide_camera_optical_frame"
+    camera_frame_id: "camera_wide_optical_frame"
     camera_info_url: package://rm_vision_bringup/config/wide_camera_info.yaml
     framerate: 30.0
     drop_old_frames: true
@@ -73,7 +73,7 @@
     ignore_classes: ["negative"]
     
     ai_model_path: "/model/0526_fp16.xml"  # 相对于包的路径
-    ai_device: "GPU"  # 可选: CPU, GPU, AUTO
+    ai_device: "CPU"  # 可选: CPU, GPU, AUTO
     ai_conf_threshold: 0.65  # 置信度阈值
     ai_nms_threshold: 0.45   # NMS阈值
 /armor_detector_wide:
@@ -89,7 +89,7 @@
     ignore_classes: ["negative"]
     
     ai_model_path: "/model/0526_fp16.xml"  # 相对于包的路径
-    ai_device: "GPU"  # 可选: CPU, GPU, AUTO
+    ai_device: "CPU"  # 可选: CPU, GPU, AUTO
     ai_conf_threshold: 0.65  # 置信度阈值
     ai_nms_threshold: 0.45   # NMS阈值
 

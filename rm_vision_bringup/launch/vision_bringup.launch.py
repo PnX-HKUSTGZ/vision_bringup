@@ -6,7 +6,7 @@ sys.path.append(os.path.join(get_package_share_directory('rm_vision_bringup'), '
 
 def generate_launch_description():
 
-    from common import node_params, launch_params, robot_state_publisher, tracker_node ,ballistic_node, rune_solver_node, rune_ballistic_node, recorder_node
+    from common import node_params, launch_params, robot_state_publisher, tracker_node ,ballistic_node, rune_solver_node, recorder_node
     from launch_ros.descriptions import ComposableNode
     from launch_ros.actions import ComposableNodeContainer, Node
     from launch.actions import TimerAction, Shutdown
@@ -61,7 +61,7 @@ def generate_launch_description():
                     package='armor_detector',
                     plugin='rm_auto_aim::ArmorDetectorNode',
                     name='armor_detector',
-                    parameters=[node_params],
+                    parameters=[node_params, {'use_ai_detector': True}],
                     extra_arguments=[{'use_intra_process_comms': True}]
                 )
     
@@ -123,11 +123,6 @@ def generate_launch_description():
         actions=[rune_solver_node],
     )
 
-    delay_rune_ballistic_node = TimerAction(
-        period=2.5,
-        actions=[rune_ballistic_node],
-    )
-
     launch_description_list = [
         robot_state_publisher,
         cam_detector,
@@ -137,7 +132,6 @@ def generate_launch_description():
     ]
     if launch_params['rune']:
         launch_description_list.append(delay_rune_solver_node)
-        launch_description_list.append(delay_rune_ballistic_node)
     if launch_params['enable_recorder']:
         launch_description_list.append(delay_recorder_node)
 

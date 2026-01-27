@@ -61,16 +61,6 @@ rune_solver_node = Node(
         node_params
     ],
 )
-
-rune_ballistic_node = Node(
-    package='rune_ballistic',
-    executable='rune_ballistic_node',
-    output='screen',
-    emulate_tty=True,
-    parameters=[
-        node_params
-    ],
-)
 recorder_node = Node(
     package='topic_recorder',
     executable='topic_recorder_node',

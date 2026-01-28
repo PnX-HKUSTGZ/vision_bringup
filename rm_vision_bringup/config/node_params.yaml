@@ -1,11 +1,49 @@
 /camera_node:
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
-    exposure_time: 2500
+    #exposure_time: 2500
     gain: 5.0
+/wide_camera_node:
+  ros__parameters:
+    video_device: "/dev/video0"
+    camera_frame_id: "camera_wide_optical_frame"
+    camera_info_url: package://rm_vision_bringup/config/wide_camera_info.yaml
+    framerate: 30.0
+    drop_old_frames: true
+    
+    
+    pixel_format: "yuyv"  # need to be supported formats
+    image_size: [1280, 720]  # 分辨率设置为 
+    
+    brightness: 0
+    contrast: 20
+    gain: 100
+    #gamma: 70
+
+    # --- 白平衡 
+    white_balance_automatic: true # 关闭自动白平衡
+    #white_balance_temperature: 4600 # (min=2800 max=6500) 根据场地灯光调整，4600-5000通常是冷白光
+
+    # --- 对焦 (机器视觉必须关闭自动对焦！) ---
+    focus_automatic_continuous: false # 必须 False，否则运动模糊严重
+    focus_absolute: 0             # (min=0 max=1023) 手动锁焦，0 通常是无穷远，需根据实际距离测试
+
+    # --- 曝光 (建议手动固定，防止灯条过曝变白) ---
+    # auto_exposure 菜单值: 1=Manual(手动), 3=Aperture Priority(自动)
+    auto_exposure: 1               # 设为 1 开启手动曝光模式
+    exposure_time_absolute: 70    # (min=50 max=10000) 曝光时间。值越小，运动模糊越少，但画面越暗
+          
+    # video_device: /dev/video0  # 请根据实际设备号修改:v4l2-ctl --list-devices
+    # camera_info_url: package://rm_vision_bringup/config/wide_camera_info.yaml
+    # pixel_format: mjpeg2rgb
+    # image_width: 1920
+    # image_height: 1080
+    # camera_frame_id: wide_cam
+    # framerate: 30.0
 /video_reader_node:
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
+    video_path: "/docs/test4Armors.mp4"
 /serial_driver:
   ros__parameters:
     timestamp_offset: -0.0025
@@ -23,7 +61,8 @@
     vision_mode: 1 # 0-outpost 6-guard 7-base 8-rune
     color: 0 # 0:红色 1:蓝色
     has_rune: false
-/armor_detector:
+    
+/armor_detector_main:
   ros__parameters:
     debug: true
     detect_color: 0 #0:red;1:blue
@@ -34,7 +73,23 @@
     classifier_threshold: 0.95
     ignore_classes: ["negative"]
     
-    ai_model_path: "/model/0526.onnx"  # 相对于包的路径
+    ai_model_path: "/model/0526_fp16.xml"  # 相对于包的路径
+    ai_device: "CPU"  # 可选: CPU, GPU, AUTO
+    ai_conf_threshold: 0.65  # 置信度阈值
+    ai_nms_threshold: 0.45   # NMS阈值
+/armor_detector_wide:
+  ros__parameters:
+    debug: true
+    subscribe_latest_image: true
+    detect_color: 0 #0:red;1:blue
+
+    binary_thres: 100
+    light.min_ratio: 0.05
+    armor.min_light_ratio: 0.8
+    classifier_threshold: 0.95
+    ignore_classes: ["negative"]
+    
+    ai_model_path: "/model/0526_fp16.xml"  # 相对于包的路径
     ai_device: "CPU"  # 可选: CPU, GPU, AUTO
     ai_conf_threshold: 0.65  # 置信度阈值
     ai_nms_threshold: 0.45   # NMS阈值
@@ -46,13 +101,13 @@
     debug: true
 
     ekf:
-      sigma2_q_xy: 0.5
+      sigma2_q_xy: 2.0
       sigma2_q_z: 0.05
       sigma2_q_yaw: 10.0
       sigma2_q_r: 10.0
 
-      r_xyz_factor: 4e-4
-      r_yaw: 5e-3
+      r_xyz_factor: 0.0004
+      r_yaw: 0.005
       r_radius: 0.1
 
     tracker:
@@ -60,7 +115,7 @@
       max_match_yaw_diff: 0.5
 
       tracking_thres: 5
-      lost_time_thres: 0.3
+      lost_time_thres: 0.6
 
     score:
       w_distance: 0.5       # 3D距离评分权重
@@ -73,15 +128,25 @@
     iteration_coeffcient_first: 0.1  
     iteration_coeffcient_second: 0.05
     air_resistence: 0.038 #小弹丸0.038 大弹丸 0.019
-    ifFireK: 0.02
+    ifFireK: 0.01
     stop_fire_time: 0.1
     fire_delay: 0.0
-    bullet_speed: 26.0
-    swich_stategy_1: 5.0
-    swich_stategy_2: 30.0
+    bullet_speed: 23.0
+    switch_stategy_1: 5.0
+    switch_stategy_2: 200.0
     max_v_yaw_gimble: 1.2
     xyz: [0.03, 0.0, 0.0]
-    rpy: [0.0, 0.038, 0.0]
+    rpy: [0.0, -0.025, -0.02] # pitch高了往低调
+    use_mpc_default: true
+    mpc_min_switch_speed: 5.0
+    mpc_max_switch_speed: 30.0
+    max_yaw_acc: 20.0
+    Q_yaw: [9e6, 0.0]
+    R_yaw: [1.0]
+    max_pitch_acc: 100.0
+    Q_pitch: [9e6, 0.0]
+    R_pitch: [1.0]
+
 /rune_detector:
   ros__parameters:
       detect_color: 0

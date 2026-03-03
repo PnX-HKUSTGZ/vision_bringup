@@ -1,7 +1,8 @@
 /camera_node:
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
-    #exposure_time: 2500
+    exposure_time: 2500
+    camera_frame_id: "camera_link"
     gain: 5.0
 /wide_camera_node:
   ros__parameters:
@@ -47,12 +48,17 @@
 /serial_driver:
   ros__parameters:
     timestamp_offset: -0.0025
-    device_name: /dev/ttyACM1
+    device_name: /dev/ttyACM0
     baud_rate: 115200
     flow_control: none
     parity: none
     stop_bits: "1"
     pitch_imu_enabled: false
+    use_dual_yaw_split: true
+    dual_yaw_limit_deg: 60.0
+    dual_yaw_center_ratio: 0.15 
+    nav_packet_version: 2
+    follow_mark_timeout_sec: 0.5
 /virtual_serial: #虚拟串口
   ros__parameters:
     roll: 0.0
@@ -91,7 +97,7 @@
     
     ai_model_path: "/model/0526_fp16.xml"  # 相对于包的路径
     ai_device: "CPU"  # 可选: CPU, GPU, AUTO
-    ai_conf_threshold: 0.65  # 置信度阈值
+    ai_conf_threshold: 0.80  # 置信度阈值
     ai_nms_threshold: 0.45   # NMS阈值
 
 /armor_tracker:
@@ -128,15 +134,15 @@
     iteration_coeffcient_first: 0.1  
     iteration_coeffcient_second: 0.05
     air_resistence: 0.038 #小弹丸0.038 大弹丸 0.019
-    ifFireK: 0.01
+    ifFireK: 0.01             
     stop_fire_time: 0.1
-    fire_delay: 0.0
+    fire_delay: 0.02            
     bullet_speed: 23.0
     switch_stategy_1: 5.0
-    switch_stategy_2: 200.0
+    switch_stategy_2: 200.0      
     max_v_yaw_gimble: 1.2
     xyz: [0.03, 0.0, 0.0]
-    rpy: [0.0, -0.025, -0.02] # pitch高了往低调
+    rpy: [0.0, -0.05, -0.02] # pitch高了往低调
     use_mpc_default: true
     mpc_min_switch_speed: 5.0
     mpc_max_switch_speed: 30.0

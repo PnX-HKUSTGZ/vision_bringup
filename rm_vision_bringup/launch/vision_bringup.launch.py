@@ -17,12 +17,7 @@ def generate_launch_description():
             package=package,
             plugin=plugin,
             name='camera_node',
-            parameters=[{
-                'camera_info_url': 'package://rm_vision_bringup/config/camera_info.yaml',
-                'exposure_time': 2500,
-                'camera_frame_id': 'camera_link',
-                'gain': 5.0,
-            }],
+            parameters=[node_params],
             extra_arguments=[{'use_intra_process_comms': True}]
         )
     def get_video_reader_node(package, plugin, name='video_reader_node', remappings=None, extra_params=None):

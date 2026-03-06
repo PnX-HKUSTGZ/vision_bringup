@@ -140,7 +140,8 @@ def generate_launch_description():
         image_node = get_video_reader_node(
             'video_reader', 
             'video_reader::VideoReaderNode',
-            name='video_reader_main'
+            name='video_reader_main',
+            extra_params={'camera_name': 'camera_main'},  # 传入 camera_name 参数
         )
         if launch_params['wide_cam']:
         # [修改] 广角相机视频节点
@@ -149,6 +150,7 @@ def generate_launch_description():
                 'video_reader', 
                 'video_reader::VideoReaderNode',
                 name='video_reader_wide',
+                extra_params={'camera_name': 'camera_wide'},  # 传入 camera_name 参数
                 remappings=[
                     ('/image_raw', '/wide_cam/image_raw'),
                     ('/image_raw/compressed', '/wide_cam/image_raw/compressed'),

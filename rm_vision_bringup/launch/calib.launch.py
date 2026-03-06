@@ -11,7 +11,7 @@ from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition
 
 def generate_launch_description():
-    camera_type = 'hik' # v4l2或hik
+    camera_type = 'v4l2' # v4l2或hik
     
     # 1. V4L2摄像头节点(当camera_type为v4l2时启动)
     if camera_type == 'v4l2':

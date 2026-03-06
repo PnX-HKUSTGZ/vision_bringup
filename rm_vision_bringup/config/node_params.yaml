@@ -1,7 +1,7 @@
 /camera_node:
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
-    #exposure_time: 2500
+    exposure_time: 2500
     gain: 5.0
 /wide_camera_node:
   ros__parameters:
@@ -89,7 +89,7 @@
     ignore_classes: ["negative"]
     
     ai_model_path: "/model/0526_fp16.xml"  # 相对于包的路径
-    ai_device: "CPU"  # 可选: CPU, GPU, AUTO
+    ai_device: "GPU"  # 可选: CPU, GPU, AUTO
     ai_conf_threshold: 0.65  # 置信度阈值
     ai_nms_threshold: 0.45   # NMS阈值
 
@@ -127,7 +127,7 @@
     iteration_coeffcient_first: 0.1  
     iteration_coeffcient_second: 0.05
     air_resistence: 0.038 #小弹丸0.038 大弹丸 0.019
-    ifFireK: 0.01
+    ifFireK: 0.005
     stop_fire_time: 0.1
     fire_delay: 0.0
     bullet_speed: 23.0

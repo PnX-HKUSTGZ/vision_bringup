@@ -57,9 +57,9 @@
     roll: 0.0
     pitch: 0.0
     yaw: 0.0
-    vision_mode: 1 # 0-outpost 6-guard 7-base 8-rune
-    color: 0 # 0:红色 1:蓝色
-    has_rune: false
+    vision_mode: 8 # 0-outpost 6-guard 7-base 8-rune
+    color: 1 # 0:红色 1:蓝色
+    has_rune: true
     
 /armor_detector_main:
   ros__parameters:
@@ -101,7 +101,7 @@
 
     ekf:
       sigma2_q_xy: 2.0
-      sigma2_q_z: 0.05
+      sigma2_q_z: 0.01
       sigma2_q_yaw: 10.0
       sigma2_q_r: 10.0
 
@@ -114,7 +114,8 @@
       max_match_yaw_diff: 0.5
 
       tracking_thres: 5
-      lost_time_thres: 0.6
+      lost_time_thres: 0.3
+      miss_match_time_thres: 0.4
 
     score:
       w_distance: 0.5       # 3D距离评分权重
@@ -135,7 +136,7 @@
     switch_stategy_2: 200.0
     max_v_yaw_gimble: 1.2
     xyz: [0.03, 0.0, 0.0]
-    rpy: [0.0, -0.025, -0.02] # pitch高了往低调
+    rpy: [0.0, -0.00, -0.00] # pitch高了往低调
     use_mpc_default: true
     mpc_min_switch_speed: 5.0
     mpc_max_switch_speed: 30.0
@@ -150,12 +151,8 @@
   ros__parameters:
       detect_color: 0
       debug: true
-      requests_limit: 5 
-      detect_r_tag: true # 是否使用传统方法识别R标
-      min_lightness: 80 # 二值化亮度阈值
-      max_iterations: 99 # 最大迭代次数
-      distance_threshold: 2.0 # 距离阈值(像素)
-      prob_threshold: 0.6 # 置信度阈值
+      binary_thresh: 28 # 二值化亮度阈值
+     
       
 /rune_solver:
   ros__parameters:

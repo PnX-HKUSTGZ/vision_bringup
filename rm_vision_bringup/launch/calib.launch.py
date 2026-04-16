@@ -11,7 +11,7 @@ from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition
 
 def generate_launch_description():
-    camera_type = 'v4l2' # v4l2或hik
+    camera_type = 'hik' # v4l2或hik
     
     # 1. V4L2摄像头节点(当camera_type为v4l2时启动)
     if camera_type == 'v4l2':
@@ -48,11 +48,11 @@ def generate_launch_description():
             name='hik_camera',
             output='screen',
             parameters=[
-                {'width': 1280},
-                {'height': 720},
+                {'width': 1440},
+                {'height': 1080},
                 {'fps': 30.0},
-                {'exposure_time': 5000},
-                {'gain': 16.0},
+                {'exposure_time': 10000},
+                {'gain': 10.0},
                 {'pixel_format': 'rgb8'},
             ]
         )

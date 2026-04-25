@@ -43,7 +43,7 @@
 /video_reader_node:
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
-    video_path: "/docs/test4Armors.mp4"
+    video_path: "/docs/test4Rune.mp4"
 /serial_driver:
   ros__parameters:
     timestamp_offset: -0.0025
@@ -55,8 +55,8 @@
 /virtual_serial: #虚拟串口
   ros__parameters:
     roll: 0.0
-    pitch: 0.0
-    yaw: 0.0
+    pitch: 20.0
+    yaw: -20.0
     vision_mode: 8 # 0-outpost 6-guard 7-base 8-rune
     color: 1 # 0:红色 1:蓝色
     has_rune: true
@@ -106,7 +106,7 @@
       sigma2_q_r: 10.0
 
       r_xyz_factor: 0.0004
-      r_yaw: 0.005
+      r_yaw: 0.001
       r_radius: 0.1
 
     tracker:
@@ -136,7 +136,7 @@
     switch_stategy_2: 200.0
     max_v_yaw_gimble: 1.2
     xyz: [0.03, 0.0, 0.0]
-    rpy: [0.0, -0.00, -0.00] # pitch高了往低调
+    rpy: [-0.026, -0.01, -0.00] # pitch高了往低调
     use_mpc_default: true
     mpc_min_switch_speed: 5.0
     mpc_max_switch_speed: 30.0
@@ -151,7 +151,18 @@
   ros__parameters:
       detect_color: 0
       debug: true
-      binary_thresh: 28 # 二值化亮度阈值
+      binary_thresh: 28
+      #虎爷代码里还有许多参数需要调整, 但都是静态的而且不好传参进去, 大部分都用的虎爷的值 比较重要的有:
+      #src/auto-aim/rune_detector/third_party/rm_vision_core/modules/detector/rune_detector/include/vc/detector/yml/RuneDetectorParam.yml 其中存放大面上的阈值, QXL额外加了闭运算
+      #src/auto-aim/rune_detector/third_party/rm_vision_core/modules/feature/rune_group/include/vc/feature/yml/RuneEKFParam.yml 其中存放了打符EKF的参数
+      #src/auto-aim/rune_detector/third_party/rm_vision_core/modules/feature/rune_group/include/vc/feature/yml/RuneGroupParam.yml 其中存放了打符分组的参数,主要是姿态限制的参数
+
+      #!!!!!!!!!
+      #src/auto-aim/rune_detector/third_party/rm_vision_core/common/camera/include/vc/camera/yml/CameraParam.yml 其中存放了相机参数, 包括内参和外参, 需要根据实际情况调整
+      #cam2joint_rmat等于我们TF树里从相机到odom的静态旋转变换, 经测试不需要加入optical的90度直接使用单位矩阵即可
+      #cam2joint_tvec等于我们TF树里从相机到odom的静态平移变换,需要根据实际测量的相机位置调整, 例如launch里odom to camera是:[0.12, 0.06,  0.04], 则在虎爷这里写为[ 60., 40., -120. ]
+      #虎爷所有单位都是毫米(mm), 需要注意转换, 请以后所有改相机相关参数的时候在虎爷里也同步修改.
+
      
       
 /rune_solver:

@@ -132,7 +132,7 @@ def generate_launch_description():
             output='both',
             emulate_tty=True,
             parameters=[node_params],
-            ros_arguments=['--ros-args', '-p', 'wide_cam:=true' if launch_params['wide_cam'] else 'wide_cam:=false'],
+            ros_arguments=['--ros-args', '-p', 'has_rune:=true' if launch_params['rune'] else 'has_rune:=false', '-p', 'wide_cam:=true' if launch_params['wide_cam'] else 'wide_cam:=false'],
         )
     
     if launch_params['video_play']:
@@ -182,7 +182,10 @@ def generate_launch_description():
         cam_detector = get_camera_detector_container(
             'main_camera_container', 'main',
             image_node, 
-            armor_detector_node_main,  
+            armor_detector_node_main
+        )
+        rune_detector_container = get_camera_detector_container(
+            'rune_detector_container', 'main',
             rune_detector_node
         )
         if launch_params['wide_cam']:
@@ -261,6 +264,7 @@ def generate_launch_description():
         ]
     if launch_params['rune']:
         launch_description_list.append(delay_rune_solver_node)
+        launch_description_list.append(rune_detector_container)
     if launch_params['enable_recorder']:
         launch_description_list.append(delay_recorder_node)
 

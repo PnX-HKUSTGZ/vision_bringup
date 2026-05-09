@@ -1,8 +1,8 @@
 camera: hik
 
 odom2camera_main:
-  xyz: "\"0.12 0.06  0.04\""
-  rpy: "\"0.0 -0.0  0.0\""
+  xyz: "\"0.135 0.078  0.11\"" #new space location
+  rpy: "\"-0.01 0.290  0.0\"" #14 degree
 
 odom2camera_wide:
   xyz: "\"0.11 -0.06 0.05\""
@@ -22,4 +22,4 @@ virtual_serial: false
 # true: 开启录制 false: 关闭录制
 enable_recorder: false
 #true:使用广角相机
-wide_cam: true
+wide_cam: false

@@ -47,7 +47,7 @@
 /serial_driver:
   ros__parameters:
     timestamp_offset: -0.0025
-    device_name: /dev/ttyACM1
+    device_name: /dev/ttyACM0
     baud_rate: 115200
     flow_control: none
     parity: none
@@ -126,16 +126,16 @@
   ros__parameters:
     iteration_coeffcient_first: 0.1  
     iteration_coeffcient_second: 0.05
-    air_resistence: 0.038 #小弹丸0.038 大弹丸 0.019
+    air_resistence: 0.019 #小弹丸0.038 大弹丸 0.019
     ifFireK: 0.005
     stop_fire_time: 0.1
-    fire_delay: 0.0
-    bullet_speed: 23.0
+    fire_delay: 0.4 #2.3
+    bullet_speed: 11.9
     switch_stategy_1: 5.0
     switch_stategy_2: 200.0
     max_v_yaw_gimble: 1.2
     xyz: [0.03, 0.0, 0.0]
-    rpy: [0.0, -0.025, -0.02] # pitch高了往低调
+    rpy: [0.0, 0.0, -0.02] # pitch高了往低调
     use_mpc_default: true
     mpc_min_switch_speed: 5.0
     mpc_max_switch_speed: 30.0

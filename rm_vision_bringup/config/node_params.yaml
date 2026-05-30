@@ -44,7 +44,7 @@
 /video_reader_node:
   ros__parameters:
     camera_info_url: package://rm_vision_bringup/config/camera_info.yaml
-    video_path: "/docs/test4Armors.mp4"
+    video_path: "/docs/hero_aim.mp4"
 /serial_driver:
   ros__parameters:
     timestamp_offset: -0.0025
@@ -62,7 +62,7 @@
     roll: 0.0
     pitch: 0.0
     yaw: 0.0
-    vision_mode: 1 # 0-outpost 6-guard 7-base 8-rune
+    vision_mode: 0 # 0-outpost 6-guard 7-base 8-rune
     color: 0 # 0:红色 1:蓝色
     has_rune: false
     
@@ -76,11 +76,14 @@
     armor.min_light_ratio: 0.6
     classifier_threshold: 0.95
     ignore_classes: ["negative"]
+    draw_ignore_classes: false  # 调试图是否绘制ignore_classes中的装甲板
     
     ai_model_path: "/model/0526_fp16.xml"  # 相对于包的路径
     ai_device: "CPU"  # 可选: CPU, GPU, AUTO
     ai_conf_threshold: 0.65  # 置信度阈值
     ai_nms_threshold: 0.45   # NMS阈值
+    ai_match_min_iou: 0.65  # AI结果与传统候选匹配的最小外接框IoU
+    ai_match_max_center_ratio: 0.25  # 中心距离/传统候选外接框对角线的最大比例
 
 /armor_tracker:
   ros__parameters:
@@ -103,6 +106,9 @@
       max_match_distance: 0.5
       max_match_yaw_diff: 0.5
       max_translation_speed: 2.0
+      height_limit_enabled: true
+      min_height: 0.7
+      max_height: 1.4
       tracking_thres: 5
       lost_time_thres: 0.6
       miss_match_time_thres: 0.3
